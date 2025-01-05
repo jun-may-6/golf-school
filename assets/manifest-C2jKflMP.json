@@ -1,7 +1,7 @@
 {
-  "name": "My PWA App",
+  "name": "편무일 골프스쿨쿨",
   "short_name": "PWA",
-  "start_url": "/",
+  "start_url": "/golf-school/#/gate/login",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",
