@@ -1,6 +1,6 @@
 {
-  "name": "편무일 골프스쿨쿨",
-  "short_name": "PWA",
+  "name": "편무일 골프스쿨",
+  "short_name": "편무일 골프스쿨",
   "start_url": "/golf-school/#/gate/login",
   "display": "standalone",
   "background_color": "#ffffff",
