@@ -1,11 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { loadingReducer } from "./gateLoadingSlice";
+import { dateReducer } from "./dateSlice";
+import { userReducer } from "./userSlice";
+import { selectedDateReducer } from "./selectedDateSlice";
 
 const store = configureStore({
   reducer: {
-    loading: loadingReducer
-    // userInfo: userReducer
+    loading: loadingReducer,
+    date: dateReducer,
+    userInfo: userReducer,
+    selectedDate: selectedDateReducer
   }
 })
 

@@ -10,12 +10,12 @@ const initialState:userInfo = {
   emailVerification: false,
   accessLevel: ""
 };
-export const userSlice = createSlice({
+const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
     setUser: (state, action)=>{
-      state = {
+      return {
         userId: action.payload.userId,
         name: action.payload.name,
         email: action.payload.email,
@@ -27,3 +27,6 @@ export const userSlice = createSlice({
     }
   }
 })
+
+export const {setUser} = userSlice.actions;
+export const userReducer = userSlice.reducer;

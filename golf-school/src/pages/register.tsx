@@ -26,31 +26,22 @@ export function RegisterPage() {
     }));
   };
   const onClickRegister = async () => {
+    dispatch(startLoading());
+    const data = {
+      userId: inputData.id,
+      password: inputData.password,
+      name: inputData.name,
+      birthday: inputData.birthday,
+      email: inputData.email
+    }
     try {
-      dispatch(startLoading());
-      const data = {
-        userId: inputData.id,
-        password: inputData.password,
-        name: inputData.name,
-        birthday: inputData.birthday,
-        email: inputData.email
-      }
       const response = await callApi.post("/users", data)
       if (response.status == 200) {
         alert("가입이 완료되었습니다.")
         navigate("/gate/login")
       }
     } catch(error) {
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError<{ message: string }>;
-        if (axiosError.response?.data?.message) {
-          alert(axiosError.response.data.message);
-        } else {
-          alert("알 수 없는 서버 에러가 발생했습니다.");
-        }
-      } else {
-        alert("예상치 못한 오류가 발생했습니다.");
-      }
+      alert("예상치 못한 오류가 발생했습니다." + error);
     } finally {
       dispatch(endLoading())
     }
