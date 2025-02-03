@@ -1,18 +1,18 @@
-import { Footer } from "./footer";
+
 import { NavBar } from "./navBar";
 import { useEffect, useState } from "react";
-import { Home } from "./home";
 import { Page } from "./page";
 import { CalendarPage } from "../../pages/calendarPage";
 import { Outlet, useOutlet } from "react-router-dom";
+import { User } from "./user";
 
 export function MainPage(): JSX.Element {
   const outlet = useOutlet();
   const pageList: { pageName: string, component: any }[] = [
-    { pageName: "home", component: Home },
+    { pageName: "home", component: Page },
     { pageName: "notice", component: Page },
     { pageName: "calendar", component: CalendarPage },
-    { pageName: "user", component: Page }]
+    { pageName: "user", component: User }]
   const [pageIndex, setPageIndex] = useState<number>(0);
   const [pagesStyle, setPagesStyle] = useState({ transform: `translateX(-${pageIndex * 100}vw)` })
   useEffect(() => {
@@ -28,9 +28,9 @@ export function MainPage(): JSX.Element {
             })}
           </div>
         </main>
-        <Footer />
       </main>
       <NavBar setPageIndex={setPageIndex} pageList={pageList} pageIndex={pageIndex} />
     </div>
+    <Outlet/>
   </>
 }

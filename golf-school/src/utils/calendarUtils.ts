@@ -1,11 +1,18 @@
 import { day, month } from "../types/calendar";
-
+export const parseDateString = (date:Date):string => {
+  return date.getFullYear() + "-" +
+  String(date.getMonth() + 1).padStart(2, '0') + "-" +
+  String(date.getDate()).padStart(2, '0') + "T" +
+  String(date.getHours()).padStart(2, '0') + ":" +
+  String(date.getMinutes()).padStart(2, '0') + ":" +
+  String(date.getSeconds()).padStart(2, '0') + "+09:00";
+}
 export const generateCalendarData = (monthRange: { startDate: Date, endDate: Date }): month[] => {
   const { startDate, endDate } = monthRange;
   const currentDate = new Date();
   const result: month[] = [];
-  const createDay = (date: Date, month:number, isToday: boolean = false):day => {
-    const isCurrentMonth = month === date.getMonth();
+  const createDay = (date: string, month:number, isToday: boolean = false):day => {
+    const isCurrentMonth = month === new Date(date).getMonth();
     return {
       date: date,
       schedule: [],
@@ -32,7 +39,7 @@ export const generateCalendarData = (monthRange: { startDate: Date, endDate: Dat
     for (let i = startDayOfWeek; i > 0; i--) {
       const date = new Date(prevMonthLastDate);
       date.setDate(prevMonthLastDate.getDate() - (i - 1));
-      beforeMonthDayArray.push(createDay(date, month));
+      beforeMonthDayArray.push(createDay(parseDateString(date), month));
     }
 
     // Current month days
@@ -44,7 +51,7 @@ export const generateCalendarData = (monthRange: { startDate: Date, endDate: Dat
         currentDate.getMonth() === date.getMonth() &&
         currentDate.getDate() === date.getDate();
 
-      currentMonthDayArray.push(createDay(date, month, isToday));
+      currentMonthDayArray.push(createDay(parseDateString(date), month, isToday));
     }
 
     // Next month days
@@ -54,7 +61,7 @@ export const generateCalendarData = (monthRange: { startDate: Date, endDate: Dat
 
     for (let i = 1; i <= daysToAdd; i++) {
       const date = new Date(year, month + 1, i);
-      nextMonthDayArray.push(createDay(date, month));
+      nextMonthDayArray.push(createDay(parseDateString(date), month));
     }
 
     // Add month data to result

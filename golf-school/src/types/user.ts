@@ -3,7 +3,9 @@ export type userInfo = {
   name:string;
   email:string;
   joinDate:Date;
+  leaveDate:Date|null;
   birthday:Date;
-  emailVerification:boolean;
+  gender:string;
   accessLevel:string;
+  profileImagePath:string|null;
 }

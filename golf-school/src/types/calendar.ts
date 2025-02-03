@@ -4,7 +4,7 @@ export type month = {
   nextMonthDayArray:day[];
 }
 export type day = {
-  date:Date;
+  date:string;
   schedule:schedule[];
   isNotAttendance:boolean;
   isClosedDate:boolean;
@@ -13,10 +13,32 @@ export type day = {
   isCurrentMonth:boolean;
 }
 export type schedule = {
-  name:string;
-  renderIndex:number;
   id:number;
+  title:string;
+  description:string;
+  date:string;
+  startTime:string | null;
+  endTime:string | null;
+  createDate:string;
+  updateDate:string;
   color:string;
-  isStart:boolean;
-  isEnd:boolean;
+  members:{
+    id:number;
+    name:string;
+    email:string;
+    userId:string;
+    attendance:boolean;
+    absenceReason:string;
+    gender:string;
+  }[]
+}
+export type scheduleInputData = {
+  title: string;
+  description?: string;
+  dateArray: string[];
+  startTime: string | null;
+  endTime: string | null;
+  isClosed: boolean;
+  color: string;
+  memberIdArray: string[]
 }

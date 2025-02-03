@@ -17,6 +17,7 @@ export function ProtectRouter() {
         console.log(userData.data)
         dispatch(setUser(userData.data))
       } catch {
+        const result = await callApi.delete("/users/jwt-tokens")
         setAuthResult(false);
       }
     };

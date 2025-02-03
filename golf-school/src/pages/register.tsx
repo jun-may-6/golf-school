@@ -9,14 +9,24 @@ export function RegisterPage() {
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [inputData, setInputData] = useState<{
-    id?: string;
-    password?: string;
-    checkPassword?: string;
-    name?: string;
-    birthday?: string;
-    email?: string;
-  }>({});
+  type input = {
+    id: string;
+    password: string;
+    checkPassword: string;
+    name: string;
+    birthday: string;
+    email: string;
+    gender: string;
+  }
+  const [inputData, setInputData] = useState<input>({
+    id: "",
+    password: "",
+    checkPassword: "",
+    name: "",
+    birthday: "",
+    email: "",
+    gender: ""
+  });
 
   const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = event.target;
@@ -26,13 +36,15 @@ export function RegisterPage() {
     }));
   };
   const onClickRegister = async () => {
+    if(!testInput())return
     dispatch(startLoading());
     const data = {
       userId: inputData.id,
       password: inputData.password,
       name: inputData.name,
       birthday: inputData.birthday,
-      email: inputData.email
+      email: inputData.email,
+      gender: inputData.gender
     }
     try {
       const response = await callApi.post("/users", data)
@@ -40,11 +52,19 @@ export function RegisterPage() {
         alert("가입이 완료되었습니다.")
         navigate("/gate/login")
       }
-    } catch(error) {
+    } catch (error) {
       alert("예상치 못한 오류가 발생했습니다." + error);
     } finally {
       dispatch(endLoading())
     }
+  }
+  const testInput = ():boolean => {
+    let result = true;
+    if(inputData.id == "") result = false;
+    if(inputData.password == "" || inputData.password != inputData.checkPassword) result = false;
+    if(inputData.birthday == "") result = false;
+    if(inputData.email == "" || !inputData.email.includes("@")) result = false;
+    return result;
   }
 
   return (
@@ -56,7 +76,7 @@ export function RegisterPage() {
         onChange={onChangeHandler}
         value={inputData.id || ""}
       />
-      <label htmlFor="password">비밀번호</label>
+      <label htmlFor="password">비밀번호 {!inputData.checkPassword ? "" : inputData.password == inputData.checkPassword ? " - 일치" : " - 불일치"}</label>
       <input
         id="password"
         type="password"
@@ -64,12 +84,11 @@ export function RegisterPage() {
         onChange={onChangeHandler}
         value={inputData.password || ""}
       />
-      <label htmlFor="checkPassword">{!inputData.checkPassword?"비밀번호 확인":inputData.password == inputData.checkPassword?"비밀번호 확인 - 일치": "비밀번호 확인 - 불일치"}</label>
       <input
         id="checkPassword"
         type="password"
-        placeholder="비밀번호를 다시 입력해주세요."
-        className={!inputData.checkPassword? "": inputData.password == inputData.checkPassword ? "safe": "warning"}
+        placeholder="비밀번호를 확인해주세요."
+        className={!inputData.checkPassword ? "" : inputData.password == inputData.checkPassword ? "safe" : "warning"}
         onChange={onChangeHandler}
         value={inputData.checkPassword || ""}
       />
@@ -87,6 +106,11 @@ export function RegisterPage() {
         onChange={onChangeHandler}
         value={inputData.birthday || ""}
       />
+      <label htmlFor="birthday">성별</label>
+      <select onChange={e=>setInputData(state=>({...state, gender:e.target.value}))}>
+        <option value="남">남성</option>
+        <option value="여">여성</option>
+      </select>
       <label htmlFor="email">이메일</label>
       <input
         id="email"
@@ -95,7 +119,12 @@ export function RegisterPage() {
         onChange={onChangeHandler}
         value={inputData.email || ""}
       />
-      <button onClick={onClickRegister}>회원가입</button>
+      <button 
+      onClick={onClickRegister}
+      className={
+        testInput()?"allow":"not-allow"
+      }
+      >회원가입</button>
       <div className="gate-link">
         <Link to="/gate/login" className="link">
           로그인

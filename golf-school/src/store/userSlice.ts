@@ -6,9 +6,11 @@ const initialState:userInfo = {
   name: "",
   email: "",
   joinDate: new Date,
+  leaveDate: null,
   birthday: new Date,
-  emailVerification: false,
-  accessLevel: ""
+  gender: "",
+  accessLevel: "",
+  profileImagePath: null
 };
 const userSlice = createSlice({
   name: 'user',
@@ -20,9 +22,11 @@ const userSlice = createSlice({
         name: action.payload.name,
         email: action.payload.email,
         joinDate: action.payload.joinDate,
+        leaveDate: action.payload.leaveDate,
         birthday: action.payload.birthday,
-        emailVerification: action.payload.emailVerification,
-        accessLevel:action.payload.accessLevel
+        gender: action.payload.gender,
+        accessLevel:action.payload.accessLevel,
+        profileImagePath: action.payload.profileImagePath
       }
     }
   }
