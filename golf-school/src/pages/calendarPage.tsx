@@ -10,8 +10,10 @@ import { SelectDateCalendar } from "../components/modal/selectDateCalendar";
 import { Modal } from "../components/modal/modal";
 import { ScheduleSetModal } from "../components/modal/scheduleSetModal";
 import { callApi } from "../apis/api";
-import { setSchedule } from "../store/scheduleSlics";
 import { ClosedDateCalendar } from "../components/closedDateCalendar";
+import { ScheduleMemberSetModal } from "../components/modal/scheduleMemberSetModal";
+import { getSchedule, setSchedule } from "../store/scheduleSlice";
+import { ScheduleViewModal } from "../components/modal/scheduleViewModal";
 
 export function CalendarPage() {
   const dispatch = useAppDispatch();
@@ -20,24 +22,26 @@ export function CalendarPage() {
   const selectedDate = useAppSelector(state => state.date)
   const userInfo = useAppSelector(state => state.userInfo)
 
-  const [monthRange, setMonthRange] = useState<{ startDate: Date, endDate: Date }>({
-    startDate: new Date(now.getFullYear(), now.getMonth() - 2, 1),
-    endDate: new Date(now.getFullYear(), now.getMonth() + 3, 0)
+  const [monthRange, setMonthRange] = useState<{ startDate: string, endDate: string }>({
+    startDate: new Date(now.getFullYear(), now.getMonth() - 2, 2).toISOString().split("T")[0],
+    endDate: new Date(now.getFullYear(), now.getMonth() + 3, 1).toISOString().split("T")[0]
   });
   const [preparedMonthRange, setPreparedMonthRange] = useState<{ startDate: string, endDate: string }>({
-    startDate: `${monthRange.startDate.getFullYear()}-${(monthRange.startDate.getMonth() + 1) > 9 ? monthRange.startDate.getMonth() + 1 : '0' + (monthRange.startDate.getMonth() + 1)}`,
-    endDate: `${monthRange.endDate.getFullYear()}-${(monthRange.endDate.getMonth() + 1) > 9 ? monthRange.endDate.getMonth() + 1 : '0' + (monthRange.endDate.getMonth() + 1)}`
+    startDate: monthRange.startDate,
+    endDate: monthRange.endDate
   })
   const [calendarData, setCalendarData] = useState<month[]>(generateCalendarData(monthRange));
 
   useEffect(() => {
     const newCalendarData = generateCalendarData(monthRange);
     setCalendarData(newCalendarData)
-    const getMonthDifference = (startDate: Date, endDate: Date) => {
-      const startYear = startDate.getFullYear();
-      const startMonth = startDate.getMonth();
-      const endYear = endDate.getFullYear();
-      const endMonth = endDate.getMonth();
+    const getMonthDifference = (startDate: string, endDate: string) => {
+      const sD = new Date(startDate)
+      const eD = new Date(endDate)
+      const startYear = sD.getFullYear();
+      const startMonth = sD.getMonth();
+      const endYear = eD.getFullYear();
+      const endMonth = eD.getMonth();
       return (endYear - startYear) * 12 + (endMonth - startMonth);
     }
     setCurrentIndex(Math.ceil(getMonthDifference(monthRange.startDate, monthRange.endDate) / 2))
@@ -59,8 +63,7 @@ export function CalendarPage() {
     endTime: null,
     createDate: "",
     updateDate: "",
-    color: "",
-    members: []
+    color: ""
   })
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -101,32 +104,8 @@ export function CalendarPage() {
       setIsFullCalendar(true);
     }
   };
-  const absenceRequest = async () => {
-    if (!confirm("결석을 신청하시겠습니까?")) return
-    try {
-      const response = await callApi.post("/schedules/absence", attendanceInput)
-      if (response.status == 200) {
-        await getScheduleData()
-        alert("결석 신청 완료")
-        setScheduleModal(state => ({ ...state, attendance: false }))
-      }
-    } catch {
-      alert("결석일 등록 실패")
-    }
-  }
-  const cancelAbsence = async (id: number) => {
-    if (!confirm("결석을 취소하시겠습니까?")) return
-    try {
-      const response = await callApi.post("/schedules/absence", { order: 'cancel', message: "", scheduleMemberId: id })
-      if (response.status == 200) {
-        await getScheduleData()
-        alert("결석 취소 완료")
-        setScheduleModal(state => ({ ...state, attendance: false }))
-      }
-    } catch {
-      alert("취소 실패")
-    }
-  }
+
+
   useEffect(() => {
     setSelectedSchedule(state => {
       const updatedSchedule = scheduleData.schedule.find(s => s.id === state.id);
@@ -146,7 +125,7 @@ export function CalendarPage() {
   }, [scheduleData]);
   const getScheduleData = async () => {
     const response = await callApi.get(`/schedules?startDate=${monthRange.startDate}&endDate=${monthRange.endDate}`)
-    const scheduleData = response.data as { schedule: schedule[], closed: Date[] }
+    const scheduleData = response.data as { schedule: schedule[], closed: string[] }
     dispatch(setSchedule(scheduleData))
   }
 
@@ -172,36 +151,14 @@ export function CalendarPage() {
     closed: false
   });
 
-  const [attendanceInput, setAttendanceInput] = useState<{ order: string, message: string, scheduleMemberId: number }>({ order: "absence", message: "", scheduleMemberId: 0 });
+
 
   const timeToMinutes = (time: string) => {
     const [hours, minutes] = time.split(":").map(Number);
     return hours * 60 + minutes;
   };
   const [reloadDisable, setReloadDisable] = useState<boolean>(false);
-  const deleteSchedule = async (scheduleId: number) => {
-    if (!confirm("삭제하시겠습니까?")) return
-    try {
-      const result = await callApi.delete("/schedules/" + scheduleId)
-      setScheduleModal(state=>({...state, schedule:false}))
-      alert("삭제 완료")
-      setSelectedSchedule({
-        id: 0,
-        title: "로딩중..",
-        description: "",
-        date: new Date().toISOString(),
-        startTime: null,
-        endTime: null,
-        createDate: "",
-        updateDate: "",
-        color: "",
-        members: []
-      })
-      getScheduleData()
-    } catch {
-      alert("삭제 실패")
-    }
-  }
+ 
   return <div className="main-page">
 
     <header>
@@ -216,7 +173,7 @@ export function CalendarPage() {
       <div className="header-right-side">
         <div className={`header-icon-box ${reloadDisable ? "disable" : ""}`}>
           <img src="icon/reload.png" className="header-icon-img" onClick={() => {
-            !reloadDisable && getScheduleData()
+            !reloadDisable && dispatch(getSchedule(monthRange.startDate, monthRange.endDate))
             setReloadDisable(true);
             setTimeout(() => {
               setReloadDisable(false)
@@ -297,79 +254,14 @@ export function CalendarPage() {
         }
       </div>
     </div>
-    {/* 스케쥴 열람 모달 */}
     <Modal
       isOpen={scheduleModal.schedule}
       onRequestClose={() => { setScheduleModal(state => { return { ...state, schedule: false } }) }}
     >
-      <div className="schedule-view-modal">
-        <div className="header">
-          {selectedSchedule.title}
-        </div>
-        <div className="date">{selectedSchedule.date.split('T')[0]}</div>
-        <div className="contents">
-          <div className="title-area">
-            <label>일정 설명</label>
-          </div>
-          <div className="detail">
-            {selectedSchedule.description}
-          </div>
-          <div className="border" />
-          <div className="title-area">
-            <label>출석 인원 {`(
-            ${selectedSchedule.members.length - selectedSchedule.members.filter(m => !m.attendance).length} / ${selectedSchedule.members.length}
-            )`}</label>
-          </div>
-          <div className="detail">
-            {selectedSchedule.members.map(m => {
-              const profileImage = m.gender == "남" ? "icon/male.png" : "icon/female.png"
-              return <><div className="profile">
-                <img src={profileImage} />
-                <div className="name">
-                  {m.name}
-                  <div className="attendance">
-                    {m.attendance ? "" : "(결석)"}
-                  </div>
-                </div>
-                <div className="reason">
-                  {m.absenceReason ? <div className="message">{m.absenceReason}</div> : null}
-                  {userInfo.userId == m.userId &&
-                    m.attendance ?
-                    <button style={{ marginLeft: "auto" }}
-                      onClick={() => {
-                        setScheduleModal(state => ({ ...state, attendance: true }))
-                        setAttendanceInput(state => ({ ...state, scheduleMemberId: m.id }))
-                      }}>불참</button> :
-                    userInfo.userId == m.userId &&
-                      !m.attendance &&
-                      !m.absenceReason ?
-                      <button style={{ marginLeft: "auto" }}
-                        onClick={() => cancelAbsence(m.id)}>취소</button>
-                      : null}
-                </div>
-              </div>
-                {userInfo.userId == m.userId &&
-                  !m.attendance &&
-                  m.absenceReason ?
-                  <button onClick={() => cancelAbsence(m.id)}>취소</button>
-                  : null}
-              </>
-            })}
-          </div>
-        </div>
-        <div className="button-area">
-          <button className="cancel"
-            onClick={() => {
-              setScheduleModal(state => ({ ...state, schedule: false }))
-            }}>닫기</button>
-          {userInfo.accessLevel == "ADMIN" ?
-            <button className=""
-              onClick={() => {
-                deleteSchedule(selectedSchedule.id)
-              }}>수정 / 삭제</button>
-            : null}
-        </div>
-      </div>
+      <ScheduleViewModal 
+      selectedSchedule = {selectedSchedule} 
+      monthRange={monthRange}
+      onClose={() => {setScheduleModal(state=>{return{...state, schedule: false}})}}/>
     </Modal>
     <Modal
       isOpen={scheduleModal.select}
@@ -419,23 +311,23 @@ export function CalendarPage() {
         <div className="header">조회 기간</div>
         <div className="contents">
           <input type="month"
-            value={preparedMonthRange.startDate || ""}
+            value={preparedMonthRange.startDate.slice(0,7) || ""}
             onChange={(e) => {
               if (preparedMonthRange.endDate && preparedMonthRange.endDate < e.target.value) {
-                setPreparedMonthRange({ startDate: e.target.value, endDate: e.target.value })
+                setPreparedMonthRange({ startDate: e.target.value + "-01", endDate: e.target.value + "-01"})
               } else {
-                setPreparedMonthRange(state => ({ ...state, startDate: e.target.value }))
+                setPreparedMonthRange(state => ({ ...state, startDate: e.target.value + "-01" }))
               }
             }}
           />
           ~
           <input type="month"
-            value={preparedMonthRange.endDate || ""}
+            value={preparedMonthRange.endDate.slice(0,7) || ""}
             onChange={(e) => {
               if (preparedMonthRange.startDate && preparedMonthRange.startDate > e.target.value) {
-                setPreparedMonthRange({ startDate: e.target.value, endDate: e.target.value })
+                setPreparedMonthRange({ startDate: e.target.value + "-01", endDate: e.target.value + "-01"})
               } else {
-                setPreparedMonthRange(state => ({ ...state, endDate: e.target.value }))
+                setPreparedMonthRange(state => ({ ...state, endDate: e.target.value + "-01" }))
               }
             }}
           />
@@ -444,49 +336,14 @@ export function CalendarPage() {
           <button className="cancel">취소</button>
           <button className="register"
             onClick={() => {
-              setMonthRange({ startDate: new Date(preparedMonthRange.startDate), endDate: new Date(preparedMonthRange.endDate) })
+              setMonthRange({ startDate: preparedMonthRange.startDate, endDate: preparedMonthRange.endDate })
               setScheduleModal(state => ({ ...state, range: false }))
             }}
           >조회</button>
         </div>
       </div>
     </Modal>
-    <Modal
-      isOpen={scheduleModal.attendance}
-      onRequestClose={() => { setScheduleModal(state => ({ ...state, attendance: false })) }}>
-      <div className="attendance-modal">
-        <div className="header">결석 처리</div>
-        <div className="contents">
-          <div className="title-area">
-            <label>일정 이름</label>
-          </div>
-          <div className="description">{selectedSchedule.title}</div>
-          <div className="title-area">
-            <label>일자</label>
-          </div>
-          <div className="description">{`${new Date(selectedSchedule.date).getFullYear()}
-          ${new Date(selectedSchedule.date).getMonth() + 1}/
-          ${new Date(selectedSchedule.date).getDate()}`}</div>
-          <div className="title-area">
-            <label>사유</label>
-          </div>
-          <div className="description">
-            <input placeholder="간단한 사유를 입력해주세요." type="text"
-              onChange={(e) => { setAttendanceInput(state => ({ ...state, message: e.target.value })) }} />
-          </div>
-          <div>
-          </div>
-          <div></div>
-        </div>
-        <div className="button-area">
-          <button className="cancel"
-            onClick={() => { setScheduleModal(state => ({ ...state, attendance: false })) }}>취소</button>
-          <button
-            onClick={absenceRequest}
-          >확인</button>
-        </div>
-      </div>
-    </Modal>
+   
     <Modal
       isOpen={scheduleModal.closed}
       onRequestClose={() => { setScheduleModal(state => ({ ...state, closed: false })) }}>

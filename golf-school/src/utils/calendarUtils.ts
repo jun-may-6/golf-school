@@ -7,7 +7,7 @@ export const parseDateString = (date:Date):string => {
   String(date.getMinutes()).padStart(2, '0') + ":" +
   String(date.getSeconds()).padStart(2, '0') + "+09:00";
 }
-export const generateCalendarData = (monthRange: { startDate: Date, endDate: Date }): month[] => {
+export const generateCalendarData = (monthRange: { startDate: string, endDate: string }): month[] => {
   const { startDate, endDate } = monthRange;
   const currentDate = new Date();
   const result: month[] = [];
@@ -24,7 +24,8 @@ export const generateCalendarData = (monthRange: { startDate: Date, endDate: Dat
     }
   }
   let current: Date = new Date(startDate);
-  while (current <= endDate) {
+  const dateEndDate = new Date(endDate)
+  while (current <= dateEndDate) {
     const year = current.getFullYear();
     const month = current.getMonth();
 

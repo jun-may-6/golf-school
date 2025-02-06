@@ -22,15 +22,15 @@ export type schedule = {
   createDate:string;
   updateDate:string;
   color:string;
-  members:{
-    id:number;
-    name:string;
-    email:string;
-    userId:string;
-    attendance:boolean;
-    absenceReason:string;
-    gender:string;
-  }[]
+}
+export type member = {
+  id:number;
+  name:string;
+  email:string;
+  userId:string;
+  attendance:boolean;
+  absenceReason:string;
+  gender:string;
 }
 export type scheduleInputData = {
   title: string;

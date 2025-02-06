@@ -6,9 +6,9 @@ import { userInfo } from "../../types/user";
 import { callApi } from "../../apis/api";
 import { ScheduleMemberSetModal } from "./scheduleMemberSetModal";
 import { useAppDispatch } from "../../store";
-import { setSchedule } from "../../store/scheduleSlics";
+import { setSchedule } from "../../store/scheduleSlice";
 
-export function ScheduleSetModal({ closeModalFunction, month, monthRange }: { closeModalFunction: () => void, month: month, monthRange: { startDate: Date, endDate: Date } }) {
+export function ScheduleSetModal({ closeModalFunction, month, monthRange }: { closeModalFunction: () => void, month: month, monthRange: { startDate: string, endDate: string } }) {
   const dispatch = useAppDispatch();
   const [inputData, setInputData] = useState<scheduleInputData>({
     title: "",
@@ -86,14 +86,6 @@ export function ScheduleSetModal({ closeModalFunction, month, monthRange }: { cl
           />
         </Modal>
         <div className="border" />
-        {/* <div className="title-area">
-          <label>연속 일정</label>
-          <input type="checkBox" onChange={(e) => { setInputData(state => { return { ...state, isContinuous: e.target.checked } }) }} />
-        </div>
-        <div className={`toggle-area ${inputData.isContinuous ? "on" : "off"}`}>
-          <input placeholder="일정 그룹 이름" onChange={(e) => { setInputData(state => { return { ...state, scheduleGroupName: e.target.value } }) }} />
-        </div>
-        <div className="border" /> */}
         <div className="title-area">
           <label>시간 설정</label>
           <input type="checkBox"
@@ -102,8 +94,7 @@ export function ScheduleSetModal({ closeModalFunction, month, monthRange }: { cl
                 setIsSetTime(true)
                 setInputData(state => {
                   const current = new Date();
-                  const time = `${current.getHours()}:${current.getMinutes()}`
-                  console.log(time)
+                  const time = `${current.getHours() > 9 ? current.getHours() : "0" + current.getHours()}:${current.getMinutes() > 9 ? current.getMinutes() : "0" + current.getMinutes()}`
                   return {
                     ...state,
                     startTime: time, endTime: time
@@ -150,7 +141,9 @@ export function ScheduleSetModal({ closeModalFunction, month, monthRange }: { cl
               setInputData(state => {
                 return { ...state, isClosed: !state.isClosed }
               })
-            }} />
+            }}
+            onChange={() => { }}
+          />
         </div>
         <div className="border" />
         <div className="title-area">

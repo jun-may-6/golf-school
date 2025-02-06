@@ -1,9 +1,10 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, ThunkAction } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { loadingReducer } from "./gateLoadingSlice";
 import { dateReducer } from "./dateSlice";
 import { userReducer } from "./userSlice";
-import { scheduleReducer } from "./scheduleSlics";
+import { Action } from 'redux';
+import { scheduleReducer } from "./scheduleSlice";
 
 const store = configureStore({
   reducer: {
@@ -14,12 +15,16 @@ const store = configureStore({
   }
 })
 
-// 타입 정의
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
-
+export type AppThunk<ReturnType = void> = ThunkAction<
+  ReturnType,
+  RootState,
+  unknown,
+  Action
+>;
 // 커스텀 훅
-export const useAppDispatch = () => useDispatch<AppDispatch>();
+export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export default store;

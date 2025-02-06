@@ -62,7 +62,7 @@ export function Calendar({ monthData, isFullCalendar, setIsFullCalendar }: { mon
                   const parseC = new Date(s.date)
                   const date = new Date(day.date)
                   return `${parseC.getFullYear()}/${parseC.getMonth()}/${parseC.getDate()}` === `${date.getFullYear()}/${date.getMonth()}/${date.getDate()}`
-                }).map(s => <div className="item" style={{ backgroundColor: s.color }}></div>)}
+                }).map(s => <div key={s.id} className="item" style={{ backgroundColor: s.color }}></div>)}
               </div>
               <div className={`full-calendar-schedule-grid ${isFullCalendar ? "full" : ""}`}>
                 {scheduleData.schedule.filter(s => {
