@@ -9,8 +9,8 @@ import { User } from "./user";
 export function MainPage(): JSX.Element {
   const outlet = useOutlet();
   const pageList: { pageName: string, component: any }[] = [
-    { pageName: "home", component: Page },
-    { pageName: "notice", component: Page },
+    // { pageName: "home", component: Page },
+    // { pageName: "notice", component: Page },
     { pageName: "calendar", component: CalendarPage },
     { pageName: "user", component: User }]
   const [pageIndex, setPageIndex] = useState<number>(0);

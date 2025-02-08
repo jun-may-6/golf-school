@@ -13,20 +13,16 @@ export function ScheduleViewModal({ selectedSchedule, monthRange, onClose }:
     onClose: () => void
   }) {
   const dispatch = useAppDispatch();
+  const getScheduleMember = async () => {
+    const response = await callApi.get(`schedules/${selectedSchedule.id}/members`)
+    if (response.status == 200) {
+      setMemberList(response.data)
+    }
+  }
   useEffect(() => {
-    const getScheduleMember = async () => {
-      const response = await callApi.get(`schedules/${selectedSchedule.id}/members`)
-      if (response.status == 200) {
-        setMemberList(response.data)
-      }
-    }
-    try {
-      getScheduleMember();
-    } catch (e) {
-      alert("스케쥴 멤버 조회 실패.")
-    } finally {
-      setIsCallApi(false)
-    }
+    getScheduleMember()
+      .catch()
+      .finally(() => { setIsCallApi(false) })
   }, [])
   const userInfo = useAppSelector(state => state.userInfo);
   const [memberList, setMemberList] = useState<member[] | null>(null);
@@ -66,7 +62,7 @@ export function ScheduleViewModal({ selectedSchedule, monthRange, onClose }:
     try {
       const response = await callApi.post("/schedules/absence", attendanceInput)
       if (response.status == 200) {
-        dispatch(getSchedule(monthRange.startDate, monthRange.endDate))
+        getScheduleMember();
         alert("결석 신청 완료")
         setAttendanceModal(false)
       }
@@ -88,16 +84,15 @@ export function ScheduleViewModal({ selectedSchedule, monthRange, onClose }:
           {selectedSchedule.description}
         </div>
         <div className="border" />
-        {memberList == null ?
-          <></>
-          : <>
-            <div className="title-area">
-              <label>출석 인원 {`(
-              ${memberList.length - memberList.filter(m => !m.attendance).length} / ${memberList.length}
-              )`}</label>
-            </div>
+        {<>
+          <div className="title-area">
+            <label>출석 인원 {memberList == null ?
+              <>로딩중...</>
+              : `(${memberList.length - memberList.filter(m => !m.attendance).length} / ${memberList.length})`}</label>
+          </div>
+          {memberList != null &&
             <div className="detail">
-              {isCallApi?<>로딩중...</>:memberList.map(m => {
+              {memberList.map(m => {
                 const profileImage = m.gender == "남" ? "icon/male.png" : "icon/female.png"
                 return <><div className="profile">
                   <img src={profileImage} />
@@ -132,7 +127,8 @@ export function ScheduleViewModal({ selectedSchedule, monthRange, onClose }:
                 </>
               })}
             </div>
-          </>
+          }
+        </>
 
         }
       </div>
@@ -153,7 +149,7 @@ export function ScheduleViewModal({ selectedSchedule, monthRange, onClose }:
       <div className="attendance-modal">
         <div className="header">결석 처리</div>
         <div className="contents">
-          <div className="title-area">
+          <div className="title-area"> 
             <label>일정 이름</label>
           </div>
           <div className="description">{selectedSchedule.title}</div>
