@@ -10,6 +10,4 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
-  // 오프라인 캐싱 등 어떤 작업도 안 함
-  console.log("테스트")
 });
