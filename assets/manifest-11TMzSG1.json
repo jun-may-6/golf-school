@@ -1,7 +1,7 @@
 {
   "name": "편무일 골프스쿨",
   "short_name": "골프스쿨",
-  "start_url": "/golf-school/",
+  "start_url": "/golf-school/#/home",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",
