@@ -39,12 +39,9 @@ export function LoginPage(): JSX.Element {
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        // AxiosError 타입으로 에러 처리
         const axiosError = error as AxiosError<{ message: string }>;
         if (axiosError.response?.data?.message) {
           alert(axiosError.response.data.message); // 서버에서 반환한 에러 메시지 출력
-        } else {
-          alert("알 수 없는 서버 에러가 발생했습니다.");
         }
       } else {
         alert("예상치 못한 오류가 발생했습니다.");

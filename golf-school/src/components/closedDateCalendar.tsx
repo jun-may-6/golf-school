@@ -2,11 +2,15 @@
 import { useEffect, useState } from "react";
 import { day, month, scheduleInputData } from "../types/calendar";
 import { callApi } from "../apis/api";
+import { useAppDispatch } from "../store";
+import { endGlobalLoading, startGlobalLoading } from "../store/globalLoadingSlice";
 export function ClosedDateCalendar({ month, closedArray, refreshSchedule, closeModal }
   : { month: month, closedArray:string[], refreshSchedule:() => Promise<void>, closeModal: ()=>void }) {
   const [dateArray, setDateArray] = useState<string[]>([]);
+  const dispatch = useAppDispatch();
   const onClickEvent = async () => {
     try {
+      dispatch(startGlobalLoading("등록중"))
       const parsedClosedDate = closedArray.map(d=> new Date(d).toISOString().split("T")[0])
       const insertList = dateArray
       const deleteList = parsedClosedDate.filter(d=> !dateArray.includes(d))
@@ -18,6 +22,8 @@ export function ClosedDateCalendar({ month, closedArray, refreshSchedule, closeM
       }
     } catch {
       alert("휴일 업데이트 실패.")
+    } finally {
+      dispatch(endGlobalLoading())
     }
   }
   useEffect(() => {

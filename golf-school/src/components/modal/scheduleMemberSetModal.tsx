@@ -1,8 +1,8 @@
 import { scheduleInputData } from "../../types/calendar";
 import { userInfo } from "../../types/user";
 
-export function ScheduleMemberSetModal({ inputData, setInputData, userList, onClose }:
-  { inputData: scheduleInputData, setInputData: React.Dispatch<React.SetStateAction<scheduleInputData>>, userList: userInfo[], onClose: () => void }
+export function ScheduleMemberSetModal({ memberIdArray, setMemberIdArray, userList, onClose }:
+  { memberIdArray: string[], setMemberIdArray: (idArray: string[]) => void, userList: userInfo[], onClose: () => void }
 ) {
 
   return <div className="schedule-member-set-modal">
@@ -11,10 +11,10 @@ export function ScheduleMemberSetModal({ inputData, setInputData, userList, onCl
       <div className="member-box">
         <div className="header">참여 인원</div>
         <div className="member-list">
-          {userList.filter(u=>inputData.memberIdArray.includes(u.userId)).map(user => {
+          {userList.filter(u => memberIdArray.includes(u.userId)).map(user => {
             const profileImage = user.gender == '여' ? "icon/female.png" : "icon/male.png"
             const birthday = new Date(user.birthday)
-            return <div key={user.userId} className="profile" onClick={() => {setInputData(state=>{return{...state, memberIdArray:state.memberIdArray.filter(id=>id!=user.userId)}})}}>
+            return <div key={user.userId} className="profile" onClick={() => { setMemberIdArray(memberIdArray.filter(id => id != user.userId)) }}>
               <div className="icon">
                 <img src={profileImage} />
               </div>
@@ -32,16 +32,19 @@ export function ScheduleMemberSetModal({ inputData, setInputData, userList, onCl
       <div className="member-box">
         <div className="header">회원 목록</div>
         <div className="member-list">
-          {userList.filter(u=>u.accessLevel != "ADMIN").map(user => {
+          {userList.filter(u => u.accessLevel != "ADMIN").map(user => {
             const profileImage = user.gender == '여' ? "icon/female.png" : "icon/male.png"
             const birthday = new Date(user.birthday)
-            return <div key={user.userId} className="profile" onClick={() => {setInputData(state=>{
-              if(state.memberIdArray.includes(user.userId)){
-                return {...state, memberIdArray: state.memberIdArray.filter(id=>id != user.userId)}
-              } else {
-                return {...state, memberIdArray: [...state.memberIdArray, user.userId]}
-              }
-            })}}>
+            return <div
+              key={user.userId}
+              className="profile"
+              onClick={() => {
+                if (memberIdArray.includes(user.userId)) {
+                  setMemberIdArray(memberIdArray.filter(id => id != user.userId))
+                } else {
+                  setMemberIdArray([...memberIdArray, user.userId])
+                }
+              }}>
               <div className="icon">
                 <img src={profileImage} />
               </div>
@@ -49,7 +52,7 @@ export function ScheduleMemberSetModal({ inputData, setInputData, userList, onCl
                 <div className="name">{user.name}</div>
                 <div className="birthday">{`${birthday.getFullYear()}.${birthday.getMonth() + 1}.${birthday.getDate()}`}</div>
               </div>
-              <input type="checkbox" checked={inputData.memberIdArray.includes(user.userId)} readOnly />
+              <input type="checkbox" checked={memberIdArray.includes(user.userId)} readOnly />
             </div>
           })}
         </div>

@@ -5,13 +5,15 @@ import { dateReducer } from "./dateSlice";
 import { userReducer } from "./userSlice";
 import { Action } from 'redux';
 import { scheduleReducer } from "./scheduleSlice";
+import { globalLoadintReducer } from "./globalLoadingSlice";
 
 const store = configureStore({
   reducer: {
     loading: loadingReducer,
     date: dateReducer,
     userInfo: userReducer,
-    schedule: scheduleReducer
+    schedule: scheduleReducer,
+    globalLoading: globalLoadintReducer
   }
 })
 

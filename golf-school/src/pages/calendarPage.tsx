@@ -12,58 +12,29 @@ import { ScheduleSetModal } from "../components/modal/scheduleSetModal";
 import { callApi } from "../apis/api";
 import { ClosedDateCalendar } from "../components/closedDateCalendar";
 import { ScheduleMemberSetModal } from "../components/modal/scheduleMemberSetModal";
-import { getSchedule, setSchedule } from "../store/scheduleSlice";
+import { decreaseIndex, getSchedule, increaseIndex, setMonthRange, setSchedule } from "../store/scheduleSlice";
 import { ScheduleViewModal } from "../components/modal/scheduleViewModal";
+import { ScheduleModifyModal } from "../components/modal/scheduleModifyModal";
 
 export function CalendarPage() {
   const dispatch = useAppDispatch();
-  const now = new Date();
   const scheduleData = useAppSelector(state => state.schedule)
   const selectedDate = useAppSelector(state => state.date)
   const userInfo = useAppSelector(state => state.userInfo)
+  const monthRange = { startDate: useAppSelector(state => state.schedule.startDate), endDate: useAppSelector(state => state.schedule.endDate) }
+  const currentIndex: number = useAppSelector(state => state.schedule.currentIndex)
+  const calendarData = generateCalendarData(monthRange);
 
-  const [monthRange, setMonthRange] = useState<{ startDate: string, endDate: string }>({
-    startDate: new Date(now.getFullYear(), now.getMonth() - 2, 2).toISOString().split("T")[0],
-    endDate: new Date(now.getFullYear(), now.getMonth() + 3, 1).toISOString().split("T")[0]
-  });
+  useEffect(() => {
+    dispatch(getSchedule())
+  }, [])
+
+  const [isFullCalendar, setIsFullCalendar] = useState(true);
+  const [selectedScheduleId, setSelectedScheduleId] = useState<number>(1);
+
   const [preparedMonthRange, setPreparedMonthRange] = useState<{ startDate: string, endDate: string }>({
     startDate: monthRange.startDate,
     endDate: monthRange.endDate
-  })
-  const [calendarData, setCalendarData] = useState<month[]>(generateCalendarData(monthRange));
-
-  useEffect(() => {
-    const newCalendarData = generateCalendarData(monthRange);
-    setCalendarData(newCalendarData)
-    const getMonthDifference = (startDate: string, endDate: string) => {
-      const sD = new Date(startDate)
-      const eD = new Date(endDate)
-      const startYear = sD.getFullYear();
-      const startMonth = sD.getMonth();
-      const endYear = eD.getFullYear();
-      const endMonth = eD.getMonth();
-      return (endYear - startYear) * 12 + (endMonth - startMonth);
-    }
-    setCurrentIndex(Math.ceil(getMonthDifference(monthRange.startDate, monthRange.endDate) / 2))
-    try {
-      getScheduleData()
-    } catch {
-      alert("일정 조회 실패")
-    }
-  }, [monthRange])
-  const [currentIndex, setCurrentIndex] = useState(2);
-  const [isFullCalendar, setIsFullCalendar] = useState(false);
-
-  const [selectedSchedule, setSelectedSchedule] = useState<schedule>({
-    id: 0,
-    title: "로딩중..",
-    description: "",
-    date: new Date().toISOString(),
-    startTime: null,
-    endTime: null,
-    createDate: "",
-    updateDate: "",
-    color: ""
   })
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -88,12 +59,12 @@ export function CalendarPage() {
   const handleTouchEnd = () => {
     const threshold = 100;
     if (dragDistanceX.current > threshold && currentIndex > 0) {
-      setCurrentIndex((prev) => prev - 1);
+      dispatch(decreaseIndex())
       startX.current = 0;
       dragDistanceX.current = 0;
       return;
     } else if (dragDistanceX.current < -threshold && currentIndex < calendarData.length - 1) {
-      setCurrentIndex((prev) => prev + 1);
+      dispatch(increaseIndex())
       startX.current = 0;
       dragDistanceX.current = 0;
       return;
@@ -106,23 +77,25 @@ export function CalendarPage() {
   };
 
 
-  useEffect(() => {
-    setSelectedSchedule(state => {
-      const updatedSchedule = scheduleData.schedule.find(s => s.id === state.id);
-      return updatedSchedule || {
-        id: 0,
-        title: "로딩중..",
-        description: "",
-        date: new Date().toISOString(),
-        startTime: null,
-        endTime: null,
-        createDate: "",
-        updateDate: "",
-        color: "",
-        members: []
-      };
-    });
-  }, [scheduleData]);
+  // useEffect(() => {
+  //   setSelectedSchedule(state => {
+  //     if(scheduleData == null) return state
+  //     if(state == null) return state
+  //     const updatedSchedule = scheduleData.schedule.find(s => s.id === state.id);
+  //     return updatedSchedule || {
+  //       id: 0,
+  //       title: "로딩중..",
+  //       description: "",
+  //       date: new Date().toISOString(),
+  //       startTime: null,
+  //       endTime: null,
+  //       createDate: "",
+  //       updateDate: "",
+  //       color: "",
+  //       memberList: []
+  //     };
+  //   });
+  // }, [scheduleData]);
   const getScheduleData = async () => {
     const response = await callApi.get(`/schedules?startDate=${monthRange.startDate}&endDate=${monthRange.endDate}`)
     const scheduleData = response.data as { schedule: schedule[], closed: string[] }
@@ -141,14 +114,16 @@ export function CalendarPage() {
     range: boolean,
     schedule: boolean,
     attendance: boolean,
-    closed: boolean
+    closed: boolean,
+    modify: boolean
   }>({
     select: false,
     class: false,
     range: false,
     schedule: false,
     attendance: false,
-    closed: false
+    closed: false,
+    modify: false
   });
 
 
@@ -158,7 +133,6 @@ export function CalendarPage() {
     return hours * 60 + minutes;
   };
   const [reloadDisable, setReloadDisable] = useState<boolean>(false);
- 
   return <div className="main-page">
 
     <header>
@@ -173,7 +147,7 @@ export function CalendarPage() {
       <div className="header-right-side">
         <div className={`header-icon-box ${reloadDisable ? "disable" : ""}`}>
           <img src="icon/reload.png" className="header-icon-img" onClick={() => {
-            !reloadDisable && dispatch(getSchedule(monthRange.startDate, monthRange.endDate))
+            !reloadDisable && dispatch(getSchedule())
             setReloadDisable(true);
             setTimeout(() => {
               setReloadDisable(false)
@@ -230,7 +204,7 @@ export function CalendarPage() {
               return (
                 <div key={index} className="schedule-box"
                   onClick={() => {
-                    setSelectedSchedule(scheduleData.schedule.find(s => s.id == schedule.id) || scheduleData.schedule[0])
+                    setSelectedScheduleId(schedule.id)
                     setScheduleModal(state => ({ ...state, schedule: true }))
                   }}>
                   <div className="timeline">
@@ -258,10 +232,19 @@ export function CalendarPage() {
       isOpen={scheduleModal.schedule}
       onRequestClose={() => { setScheduleModal(state => { return { ...state, schedule: false } }) }}
     >
-      <ScheduleViewModal 
-      selectedSchedule = {selectedSchedule} 
-      monthRange={monthRange}
-      onClose={() => {setScheduleModal(state=>{return{...state, schedule: false}})}}/>
+      <ScheduleViewModal
+        selectedSchedule={scheduleData.schedule.find(s=>s.id == selectedScheduleId)}
+        openModifyModal={() => { setScheduleModal(state => ({ ...state, modify: true })) }}
+        onClose={() => { setScheduleModal(state => { return { ...state, schedule: false } }) }} />
+    </Modal>
+    <Modal
+      isOpen={scheduleModal.modify}
+      onRequestClose={() => { setScheduleModal(state => ({ ...state, modify: false })) }}
+    >
+      <ScheduleModifyModal
+        selectedSchedule={scheduleData.schedule.find(s=>s.id == selectedScheduleId)}
+        openViewModal={() => { setScheduleModal(state => ({ ...state, schedule: true })) }}
+        onClose={() => { setScheduleModal(state => { return { ...state, modify: false } }) }} />
     </Modal>
     <Modal
       isOpen={scheduleModal.select}
@@ -311,10 +294,10 @@ export function CalendarPage() {
         <div className="header">조회 기간</div>
         <div className="contents">
           <input type="month"
-            value={preparedMonthRange.startDate.slice(0,7) || ""}
+            value={preparedMonthRange.startDate.slice(0, 7) || ""}
             onChange={(e) => {
               if (preparedMonthRange.endDate && preparedMonthRange.endDate < e.target.value) {
-                setPreparedMonthRange({ startDate: e.target.value + "-01", endDate: e.target.value + "-01"})
+                setPreparedMonthRange({ startDate: e.target.value + "-01", endDate: e.target.value + "-01" })
               } else {
                 setPreparedMonthRange(state => ({ ...state, startDate: e.target.value + "-01" }))
               }
@@ -322,10 +305,10 @@ export function CalendarPage() {
           />
           ~
           <input type="month"
-            value={preparedMonthRange.endDate.slice(0,7) || ""}
+            value={preparedMonthRange.endDate.slice(0, 7) || ""}
             onChange={(e) => {
               if (preparedMonthRange.startDate && preparedMonthRange.startDate > e.target.value) {
-                setPreparedMonthRange({ startDate: e.target.value + "-01", endDate: e.target.value + "-01"})
+                setPreparedMonthRange({ startDate: e.target.value + "-01", endDate: e.target.value + "-01" })
               } else {
                 setPreparedMonthRange(state => ({ ...state, endDate: e.target.value + "-01" }))
               }
@@ -336,14 +319,16 @@ export function CalendarPage() {
           <button className="cancel">취소</button>
           <button className="register"
             onClick={() => {
-              setMonthRange({ startDate: preparedMonthRange.startDate, endDate: preparedMonthRange.endDate })
+              dispatch(setMonthRange({ startDate: preparedMonthRange.startDate, endDate: preparedMonthRange.endDate }))
+              dispatch(getSchedule())
+              // setMonthRange({ startDate: preparedMonthRange.startDate, endDate: preparedMonthRange.endDate })
               setScheduleModal(state => ({ ...state, range: false }))
             }}
           >조회</button>
         </div>
       </div>
     </Modal>
-   
+
     <Modal
       isOpen={scheduleModal.closed}
       onRequestClose={() => { setScheduleModal(state => ({ ...state, closed: false })) }}>

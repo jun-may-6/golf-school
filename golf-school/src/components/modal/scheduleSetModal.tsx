@@ -7,7 +7,7 @@ import { callApi } from "../../apis/api";
 import { ScheduleMemberSetModal } from "./scheduleMemberSetModal";
 import { useAppDispatch } from "../../store";
 import { setSchedule } from "../../store/scheduleSlice";
-
+import { endGlobalLoading, startGlobalLoading } from "../../store/globalLoadingSlice";
 export function ScheduleSetModal({ closeModalFunction, month, monthRange }: { closeModalFunction: () => void, month: month, monthRange: { startDate: string, endDate: string } }) {
   const dispatch = useAppDispatch();
   const [inputData, setInputData] = useState<scheduleInputData>({
@@ -44,6 +44,7 @@ export function ScheduleSetModal({ closeModalFunction, month, monthRange }: { cl
       dispatch(setSchedule(response.data))
     }
     try {
+      dispatch(startGlobalLoading("등록중.."))
       const response = await callApi.post("/schedules", inputData)
       if (response.status == 200) {
         refreshScheduleData();
@@ -52,6 +53,8 @@ export function ScheduleSetModal({ closeModalFunction, month, monthRange }: { cl
       }
     } catch (e) {
       alert("에러 발생" + e)
+    } finally {
+      dispatch(endGlobalLoading())
     }
   }
 
@@ -79,8 +82,8 @@ export function ScheduleSetModal({ closeModalFunction, month, monthRange }: { cl
         </div>
         <Modal isOpen={isOpenMemberModal} onRequestClose={() => { setIsOpenMemberModal(false) }}>
           <ScheduleMemberSetModal
-            inputData={inputData}
-            setInputData={setInputData}
+            memberIdArray={inputData.memberIdArray}
+            setMemberIdArray={(idArray:string[]) => {setInputData(state=>({...state, memberIdArray: idArray}))}}
             userList={userList}
             onClose={() => { setIsOpenMemberModal(false) }}
           />

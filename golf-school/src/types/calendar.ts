@@ -22,6 +22,7 @@ export type schedule = {
   createDate:string;
   updateDate:string;
   color:string;
+  memberList: member[] | null
 }
 export type member = {
   id:number;

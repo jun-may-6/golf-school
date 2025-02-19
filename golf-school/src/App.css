@@ -696,6 +696,10 @@ header {
   text-align: center;
   margin-bottom: 5%;
 }
+.title-area input[type="date"]{
+  font-family: 'Pretendard Variable', 'Noto Sans KR';
+  width: 40%;
+}
 
 .schedule-member-set-modal .contents {
   height: 70%;
@@ -1117,7 +1121,11 @@ header {
   justify-content: space-between;
   height: 10%;
 }
-
+.schedule-view-modal .button-area-admin {
+  display: flex;
+  justify-content: space-between;
+  height: 10%;
+}
 .schedule-view-modal .button-area button {
   background-color: var(--primary-color);
   color: white;
@@ -1129,9 +1137,28 @@ header {
   border: 1px solid rgb(167, 167, 167);
   font-weight: 700;
 }
+.schedule-view-modal .button-area-admin button {
+  background-color: var(--primary-color);
+  color: white;
+  display: block;
+  height: 80%;
+  width: 25%;
+  margin: 5% auto 0 auto;
+  border-radius: 5px;
+  border: 1px solid rgb(167, 167, 167);
+  font-weight: 700;
+}
 .schedule-view-modal .button-area .cancel {
   background-color: #ffffff;
   color: rgb(45, 45, 45);
+}
+.schedule-view-modal .button-area-admin .cancel {
+  background-color: #ffffff;
+  color: rgb(45, 45, 45);
+}
+.schedule-view-modal .button-area-admin .delete {
+  background-color: rgb(227, 129, 129);
+  border-color: #b9b9b9;
 }
 .attendance-modal {
   width: 70vw;
@@ -1192,4 +1219,19 @@ header {
 .date-select-area .button-area .cancel {
   background-color: white;
   color: black;
+}
+.test-exist {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+.test-exist input{
+  width: 78%;
+}
+.test-exist button {
+  margin-left: 2%;
+  width: 20%;
+  font-size: 0.7rem;
+  text-align: center;
+  letter-spacing: normal;
 }

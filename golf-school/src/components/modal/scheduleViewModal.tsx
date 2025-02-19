@@ -1,77 +1,87 @@
 import { useEffect, useState } from "react"
 import { member, schedule } from "../../types/calendar"
-import { callApi } from "../../apis/api";
-import axios from "axios";
+import { callApi, handleApiError } from "../../apis/api";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { getSchedule } from "../../store/scheduleSlice";
+import { getSchedule, setScheduleMember } from "../../store/scheduleSlice";
 import { Modal } from "./modal";
+import { endGlobalLoading, startGlobalLoading } from "../../store/globalLoadingSlice";
 
-export function ScheduleViewModal({ selectedSchedule, monthRange, onClose }:
+export function ScheduleViewModal({ selectedSchedule, openModifyModal, onClose }:
   {
-    selectedSchedule: schedule,
-    monthRange: { startDate: string, endDate: string },
+    selectedSchedule: schedule | undefined,
+    openModifyModal: () => void,
     onClose: () => void
   }) {
+  
+  if(selectedSchedule == undefined) return
   const dispatch = useAppDispatch();
-  const getScheduleMember = async () => {
-    const response = await callApi.get(`schedules/${selectedSchedule.id}/members`)
-    if (response.status == 200) {
-      setMemberList(response.data)
+  const getScheduleMember = async (message:string)=>{
+    try {
+      dispatch(startGlobalLoading(message))
+      const response = await callApi.get(`schedules/${selectedSchedule.id}/members`)
+      dispatch(setScheduleMember({scheduleId:selectedSchedule.id, memberList: response.data}))
+    } catch (e) {
+      handleApiError(e)
+    } finally {
+      dispatch(endGlobalLoading())
     }
   }
   useEffect(() => {
-    getScheduleMember()
-      .catch()
-      .finally(() => { setIsCallApi(false) })
-  }, [])
+    if(selectedSchedule.memberList == null){
+      getScheduleMember("멤버 조회중");
+    }
+  }, [selectedSchedule])
   const userInfo = useAppSelector(state => state.userInfo);
-  const [memberList, setMemberList] = useState<member[] | null>(null);
   const [attendanceInput, setAttendanceInput] = useState<{ order: string, message: string, scheduleMemberId: number }>({ order: "absence", message: "", scheduleMemberId: 0 });
   const [attendanceModal, setAttendanceModal] = useState<boolean>(false);
-  const [isCallApi, setIsCallApi] = useState<boolean>(true);
   const cancelAbsence = async (id: number) => {
     if (!confirm("결석을 취소하시겠습니까?")) return
     try {
+      dispatch(startGlobalLoading("시작"))
       const response = await callApi.post("/schedules/absence", { order: 'cancel', message: "", scheduleMemberId: id })
       if (response.status == 200) {
-        dispatch(getSchedule(monthRange.startDate, monthRange.endDate))
+        getScheduleMember("취소중")
         alert("결석 취소 완료")
         setAttendanceModal(false)
       }
-    } catch {
-      alert("취소 실패")
+    } catch (e){
+      handleApiError(e)
+    } finally {
+      dispatch(endGlobalLoading())
     }
   }
   const deleteSchedule = async (scheduleId: number) => {
     if (!confirm("삭제하시겠습니까?")) return
     try {
+      dispatch(startGlobalLoading("삭제중..."))
       const result = await callApi.delete("/schedules/" + scheduleId)
+      dispatch(getSchedule())
       onClose()
       alert("삭제 완료")
-      if (result.status == 200) {
-        dispatch(getSchedule(monthRange.startDate, monthRange.endDate))
-      } else {
-        dispatch(getSchedule(monthRange.startDate, monthRange.endDate))
-      }
     } catch {
       alert("삭제 실패")
+    } finally {
+      dispatch(endGlobalLoading())
     }
   }
   const absenceRequest = async () => {
     if (!confirm("결석을 신청하시겠습니까?")) return
     try {
+      dispatch(startGlobalLoading("신청중"))
       const response = await callApi.post("/schedules/absence", attendanceInput)
       if (response.status == 200) {
-        getScheduleMember();
+        getScheduleMember("삭제중");
         alert("결석 신청 완료")
         setAttendanceModal(false)
       }
     } catch {
       alert("결석일 등록 실패")
+    } finally {
+      dispatch(endGlobalLoading())
     }
   }
   return <>
-    <div className="schedule-view-modal">
+    <div className={`schedule-view-modal`}>
       <div className="header">
         {selectedSchedule.title}
       </div>
@@ -86,13 +96,13 @@ export function ScheduleViewModal({ selectedSchedule, monthRange, onClose }:
         <div className="border" />
         {<>
           <div className="title-area">
-            <label>출석 인원 {memberList == null ?
-              <>로딩중...</>
-              : `(${memberList.length - memberList.filter(m => !m.attendance).length} / ${memberList.length})`}</label>
+            <label>출석 인원 {selectedSchedule.memberList == null ?
+              <></>
+              : `(${selectedSchedule.memberList.length - selectedSchedule.memberList.filter(m => !m.attendance).length} / ${selectedSchedule.memberList.length})`}</label>
           </div>
-          {memberList != null &&
+          {selectedSchedule.memberList != null &&
             <div className="detail">
-              {memberList.map(m => {
+              {selectedSchedule.memberList.map(m => {
                 const profileImage = m.gender == "남" ? "icon/male.png" : "icon/female.png"
                 return <><div className="profile">
                   <img src={profileImage} />
@@ -110,7 +120,7 @@ export function ScheduleViewModal({ selectedSchedule, monthRange, onClose }:
                         onClick={() => {
                           setAttendanceModal(true)
                           setAttendanceInput(state => ({ ...state, scheduleMemberId: m.id }))
-                        }}>불참</button> :
+                        }}>결석</button> :
                       userInfo.userId == m.userId &&
                         !m.attendance &&
                         !m.absenceReason ?
@@ -132,14 +142,23 @@ export function ScheduleViewModal({ selectedSchedule, monthRange, onClose }:
 
         }
       </div>
-      <div className="button-area">
+      <div className={`button-area${userInfo.accessLevel == "ADMIN" ?"-admin":""}`}>
         <button className="cancel"
           onClick={onClose}>닫기</button>
         {userInfo.accessLevel == "ADMIN" ?
-          <button className=""
+        <>
+        <button
+        onClick={() => {
+          openModifyModal()
+          onClose()
+        }}>
+          수정
+        </button>
+          <button className="delete"
             onClick={() => {
               deleteSchedule(selectedSchedule.id)
-            }}>수정 / 삭제</button>
+            }}>삭제</button>
+            </>
           : null}
       </div>
     </div>

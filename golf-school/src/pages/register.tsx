@@ -3,7 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../store";
 import { endLoading, startLoading } from "../store/gateLoadingSlice";
 import axios, { AxiosError } from "axios";
-import { callApi } from "../apis/api";
+import { callApi, handleApiError } from "../apis/api";
+import { endGlobalLoading, startGlobalLoading } from "../store/globalLoadingSlice";
 
 export function RegisterPage() {
 
@@ -36,7 +37,7 @@ export function RegisterPage() {
     }));
   };
   const onClickRegister = async () => {
-    if(!testInput())return
+    if (!testInput()) return
     dispatch(startLoading());
     const data = {
       userId: inputData.id,
@@ -58,24 +59,51 @@ export function RegisterPage() {
       dispatch(endLoading())
     }
   }
-  const testInput = ():boolean => {
+  const testInput = (): boolean => {
     let result = true;
-    if(inputData.id == "") result = false;
-    if(inputData.password == "" || inputData.password != inputData.checkPassword) result = false;
-    if(inputData.birthday == "") result = false;
-    if(inputData.email == "" || !inputData.email.includes("@")) result = false;
+    if (inputData.id == "") result = false;
+    if (inputData.password == "" || inputData.password != inputData.checkPassword) result = false;
+    if (inputData.birthday == "") result = false;
+    if (inputData.email == "" || !inputData.email.includes("@")) result = false;
+    if (!isPossibleId) result = false;
     return result;
+  }
+  const [isPossibleId, setIsPossibleId] = useState<boolean>(false);
+  const onClickIdExistButton = async (id: string) => {
+    try {
+      dispatch(startGlobalLoading("확인중"))
+      const response = await axios.get(`https://z9m2acdblb.execute-api.ap-northeast-2.amazonaws.com/api/users/${id}/exists`)
+      if (response.data.isAllowdId) {
+        setIsPossibleId(true)
+      } else {
+        alert("중복되는 아이디입니다.")
+      };
+    } catch(e) {
+      handleApiError(e)
+    } finally {
+      dispatch(endGlobalLoading())
+    }
   }
 
   return (
     <div className="login-container">
-      <label htmlFor="id">아이디</label>
-      <input
-        id="id"
-        placeholder="20자 이내의 아이디를 입력해주세요."
-        onChange={onChangeHandler}
-        value={inputData.id || ""}
-      />
+      <label htmlFor="id">아이디 - {isPossibleId ? "사용 가능한 아이디입니다." : "중복을 확인해주세요."}</label>
+      <div className="test-exist">
+        <input
+          id="id"
+          placeholder="아이디를 입력해주세요."
+          onChange={(e) => {
+            onChangeHandler(e)
+            setIsPossibleId(false);
+          }}
+          value={inputData.id || ""}
+          className={isPossibleId ? "safe" : "warning"}
+        />
+        <button
+          onClick={() => {
+            onClickIdExistButton(inputData.id)
+          }}>확인</button>
+      </div>
       <label htmlFor="password">비밀번호 {!inputData.checkPassword ? "" : inputData.password == inputData.checkPassword ? " - 일치" : " - 불일치"}</label>
       <input
         id="password"
@@ -107,7 +135,7 @@ export function RegisterPage() {
         value={inputData.birthday || ""}
       />
       <label htmlFor="birthday">성별</label>
-      <select onChange={e=>setInputData(state=>({...state, gender:e.target.value}))}>
+      <select onChange={e => setInputData(state => ({ ...state, gender: e.target.value }))}>
         <option value="남">남성</option>
         <option value="여">여성</option>
       </select>
@@ -119,11 +147,11 @@ export function RegisterPage() {
         onChange={onChangeHandler}
         value={inputData.email || ""}
       />
-      <button 
-      onClick={onClickRegister}
-      className={
-        testInput()?"allow":"not-allow"
-      }
+      <button
+        onClick={onClickRegister}
+        className={
+          testInput() ? "allow" : "not-allow"
+        }
       >회원가입</button>
       <div className="gate-link">
         <Link to="/gate/login" className="link">
