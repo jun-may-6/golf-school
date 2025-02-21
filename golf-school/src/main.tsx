@@ -14,7 +14,7 @@ createRoot(document.getElementById('root')!).render(
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("/golf-school/service-worker.js") // 빌드 결과물 경로
+      .register("/service-worker.js") // 빌드 결과물 경로
       .then((reg) => {
         console.log("Service Worker registered: ", reg);
       })
