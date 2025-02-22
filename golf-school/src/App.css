@@ -36,7 +36,6 @@ body {
   width: 100%;
   height: 100%;
 }
-
 /* 모달 */
 .modal-overlay {
   position: fixed;
@@ -634,6 +633,11 @@ header {
   align-items: center;
   height: 4vh;
 }
+.title-area label{
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
 
 .title-area img {
   height: 80%;
@@ -1092,7 +1096,86 @@ header {
   margin-left: 2vw;
   border-radius: 5px;
 }
+.schedule-view-modal .comment-area .comment-input {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  min-height: 7vh;
+}
 
+.schedule-view-modal .comment-area .profile-img {
+  width: 8vw;
+  height: 8vw;
+  padding-right: 3vw;
+}
+.schedule-view-modal .comment-area .send {
+  padding: 2vw;
+  width: 8vw;
+  height: 8vw;
+}
+.schedule-view-modal .comment-area textarea {
+  padding: 1vw;
+  border-color: #9FBAAB;
+  border-radius: 5px;
+  resize: none;
+  height: 4vh;
+  width: 100vw;
+  font-family: 'Pretendard Variable', 'Noto Sans KR';
+}
+.schedule-view-modal .comment-area .comment {
+  width: 100%;
+  display: flex;
+  padding: 1vh 0;
+}
+.schedule-view-modal .comment-area .comment .value {
+  width: 100%
+}
+.schedule-view-modal .comment-area .comment .top {
+  width: 100%;
+  justify-content: space-between;
+  display: flex;
+}
+.schedule-view-modal .comment-area .name {
+  font-weight: 700;
+  font-size: 0.6rem;
+}
+.schedule-view-modal .comment-area .button-area {
+  font-size: 0.6rem;
+  color: #B0B0B0;
+}
+.schedule-view-modal .comment-area .comment .bottom {
+  margin-top: 1vh;
+  bottom: 0px;
+  font-size: 0.6rem;
+}
+.schedule-view-modal .comment-area .reply-input {
+  display: flex;
+}
+.schedule-view-modal .comment-area .reply-icon {
+  width: 4vw;
+  margin-right: 2vw;
+  height: 4vw;
+}
+.schedule-view-modal .comment-area .modify-input {
+  display: flex;
+  width: calc(100% - 11vw);
+}
+.schedule-view-modal .comment-area .reply-modify-input {
+  display: flex;
+  width: calc(100% - 11vw - 6vw);
+}
+.hash-tag {
+  color: #5F7C5E
+}
+.delete-comment {
+  color: #7c7c7c;
+}
+.comment-border {
+  width: 100%;
+  height: 1px;
+  background-color: rgb(77, 77, 77);
+  margin: 2vh 0;
+}
 /* 말풍선 꼬리 추가 */
 .schedule-view-modal .contents .detail .profile .reason .message::before {
   content: "";

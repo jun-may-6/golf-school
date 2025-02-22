@@ -23,6 +23,7 @@ export type schedule = {
   updateDate:string;
   color:string;
   memberList: member[] | null
+  commentList: comment[] | null
 }
 export type member = {
   id:number;
@@ -42,4 +43,16 @@ export type scheduleInputData = {
   isClosed: boolean;
   color: string;
   memberIdArray: string[]
+}
+export type comment = {
+  id: number;
+  refCommentId: number;
+  userId: string;
+  name: string;
+  refUserId: string;
+  refUserName: string;
+  message: string;
+  createDate:string;
+  updateDate:string;
+  isDelete:boolean;
 }

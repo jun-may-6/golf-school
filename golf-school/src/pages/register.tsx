@@ -26,7 +26,7 @@ export function RegisterPage() {
     name: "",
     birthday: "",
     email: "",
-    gender: ""
+    gender: "남"
   });
 
   const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {

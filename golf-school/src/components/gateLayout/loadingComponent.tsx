@@ -1,4 +1,4 @@
-import "../animaion.css"
+
 
 export function LoadingComponent({loadingMessage = "LOADING..."}:{loadingMessage?:string}) {
   return <div className="loading-container">

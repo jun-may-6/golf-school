@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppThunk } from ".";
-import { member, schedule } from "../types/calendar";
+import { comment, member, schedule } from "../types/calendar";
 import { callApi, handleApiError } from "../apis/api";
 
 interface ScheduleState {
@@ -45,11 +45,18 @@ const scheduleSlice = createSlice({
       if (scheduleIndex !== -1) {
         state.schedule[scheduleIndex].memberList = memberList;
       }
-    }    
+    },
+    setScheduleComment: (state, action: PayloadAction<{scheduleId:number, commentList: comment[]}>)=>{
+      const {scheduleId, commentList} = action.payload
+      const scheduleIndex = state.schedule.findIndex(s => s.id === scheduleId);
+      if (scheduleIndex !== -1) {
+        state.schedule[scheduleIndex].commentList = commentList;
+      }
+    }
   },
 });
 
-export const { setSchedule, setMonthRange, increaseIndex, decreaseIndex, setScheduleMember } = scheduleSlice.actions;
+export const { setSchedule, setMonthRange, increaseIndex, decreaseIndex, setScheduleMember, setScheduleComment } = scheduleSlice.actions;
 
 
 const getMonthDifference = (startDate: string, endDate: string) => {
@@ -74,17 +81,6 @@ export const getSchedule = (): AppThunk => async (dispatch, getState) => {
     console.error("Failed to fetch schedule:", error);
   }
 };
-export const getScheduleMember = (scheduleId: number): AppThunk => async (dispatch) => {
-  try {
-    const response = await callApi.get(`schedules/${scheduleId}/members`)
-    const memberList = response.data as member[]
-    if (response.status == 200) {
-      dispatch(setScheduleMember({scheduleId:scheduleId, memberList:memberList}))
-    }
-  } catch (e) {
-    handleApiError(e)
-  }
-}
 
 export const scheduleReducer = scheduleSlice.reducer;
 

@@ -3,6 +3,7 @@ import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { LoginPage } from './pages/login';
 import { MainPage } from './components/layout/mainLayout';
 import "./App.css";
+import "./Animaion.css";
 import { RegisterPage } from './pages/register';
 import { GateLayout } from './components/gateLayout/gateLayout';
 import { ProtectRouter } from './components/layout/protectRouter';

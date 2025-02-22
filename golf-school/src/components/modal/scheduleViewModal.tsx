@@ -5,6 +5,8 @@ import { useAppDispatch, useAppSelector } from "../../store";
 import { getSchedule, setScheduleMember } from "../../store/scheduleSlice";
 import { Modal } from "./modal";
 import { endGlobalLoading, startGlobalLoading } from "../../store/globalLoadingSlice";
+import { SmallLoadingComponent } from "../smallLoading";
+import { CommentComponent } from "../commentComponent";
 
 export function ScheduleViewModal({ selectedSchedule, openModifyModal, onClose }:
   {
@@ -15,20 +17,27 @@ export function ScheduleViewModal({ selectedSchedule, openModifyModal, onClose }
   
   if(selectedSchedule == undefined) return
   const dispatch = useAppDispatch();
-  const getScheduleMember = async (message:string)=>{
+  const getScheduleMember = async ()=>{
     try {
-      dispatch(startGlobalLoading(message))
+      setLoadingStatus(state=>({...state, member: false}))
       const response = await callApi.get(`schedules/${selectedSchedule.id}/members`)
       dispatch(setScheduleMember({scheduleId:selectedSchedule.id, memberList: response.data}))
     } catch (e) {
       handleApiError(e)
     } finally {
-      dispatch(endGlobalLoading())
+      setLoadingStatus(state=>({...state, member: true}))
     }
   }
+  const [loadingStatus, setLoadingStatus] = useState<{
+    member: boolean;
+    reply: boolean;
+  }>({
+    member: false,
+    reply: false
+  })
   useEffect(() => {
     if(selectedSchedule.memberList == null){
-      getScheduleMember("멤버 조회중");
+      getScheduleMember();
     }
   }, [selectedSchedule])
   const userInfo = useAppSelector(state => state.userInfo);
@@ -40,7 +49,7 @@ export function ScheduleViewModal({ selectedSchedule, openModifyModal, onClose }
       dispatch(startGlobalLoading("시작"))
       const response = await callApi.post("/schedules/absence", { order: 'cancel', message: "", scheduleMemberId: id })
       if (response.status == 200) {
-        getScheduleMember("취소중")
+        getScheduleMember()
         alert("결석 취소 완료")
         setAttendanceModal(false)
       }
@@ -70,7 +79,7 @@ export function ScheduleViewModal({ selectedSchedule, openModifyModal, onClose }
       dispatch(startGlobalLoading("신청중"))
       const response = await callApi.post("/schedules/absence", attendanceInput)
       if (response.status == 200) {
-        getScheduleMember("삭제중");
+        getScheduleMember();
         alert("결석 신청 완료")
         setAttendanceModal(false)
       }
@@ -97,7 +106,7 @@ export function ScheduleViewModal({ selectedSchedule, openModifyModal, onClose }
         {<>
           <div className="title-area">
             <label>출석 인원 {selectedSchedule.memberList == null ?
-              <></>
+              <SmallLoadingComponent/>
               : `(${selectedSchedule.memberList.length - selectedSchedule.memberList.filter(m => !m.attendance).length} / ${selectedSchedule.memberList.length})`}</label>
           </div>
           {selectedSchedule.memberList != null &&
@@ -139,8 +148,8 @@ export function ScheduleViewModal({ selectedSchedule, openModifyModal, onClose }
             </div>
           }
         </>
-
         }
+        <CommentComponent schedule={selectedSchedule}/>
       </div>
       <div className={`button-area${userInfo.accessLevel == "ADMIN" ?"-admin":""}`}>
         <button className="cancel"

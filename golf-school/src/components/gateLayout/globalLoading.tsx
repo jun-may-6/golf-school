@@ -1,6 +1,4 @@
-import { useEffect } from "react"
-import "../animaion.css"
-import ReactDOM from "react-dom"
+
 
 export function GlobalLoading({ isLoading, loadingMessage = "LOADING" }: { isLoading: boolean, loadingMessage?: string }) {
   if (!isLoading) return
