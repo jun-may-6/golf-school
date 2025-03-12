@@ -1,6 +1,5 @@
 import { configureStore, ThunkAction } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import { loadingReducer } from "./gateLoadingSlice";
 import { dateReducer } from "./dateSlice";
 import { userReducer } from "./userSlice";
 import { Action } from 'redux';
@@ -9,7 +8,6 @@ import { globalLoadintReducer } from "./globalLoadingSlice";
 
 const store = configureStore({
   reducer: {
-    loading: loadingReducer,
     date: dateReducer,
     userInfo: userReducer,
     schedule: scheduleReducer,

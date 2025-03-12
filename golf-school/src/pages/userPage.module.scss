@@ -1,0 +1,109 @@
+.container {
+  header {
+    position: sticky;
+    display: grid;
+    top: 0;
+    background-color: var(--primary-color);
+    color: white;
+    text-align: center;
+    width: calc(var(--vw) * 100);
+    height: calc(var(--vh) * 7);
+    align-items: center;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: calc(var(--vh) * 7);
+    .left-side {
+      box-sizing: border-box;
+      display: flex;
+      height: 100%;
+      width: 100%;
+      padding: calc(var(--vw) * 1);
+    }
+    .right-side {
+      box-sizing: border-box;
+      flex-direction: row-reverse;
+      display: flex;
+      height: 100%;
+      width: 100%;
+      padding: calc(var(--vw) * 1);
+    }
+    .icon-box {
+      margin: 0.2rem;
+      height: calc(100% - 0.4rem);
+      aspect-ratio: 1/1;
+      box-sizing: border-box;
+      border: rgb(80, 80, 80) solid 0.1rem;
+      border-radius: 5px;
+      filter: invert(5%), brightness(0%);
+      padding: 0.2rem;
+      background-color: rgb(126, 145, 127);
+      transition: filter 0.3s ease-in-out;
+      img {
+        filter: invert(90%);
+        height: 100%;
+        width: 100%;
+      }
+      &.disable {
+        filter: brightness(0.7);
+      }
+    }
+  }
+  .main {
+    box-sizing: border-box;
+    position: relative;
+    height: calc(var(--vh) * 86);
+    width: calc(var(--vw) * 100);
+    background-color: var(--background-color);
+    padding: 10%;
+    .profile {
+      margin-top: calc(var(--vh) * 2);
+      height: calc(var(--vh) * 10);
+      width: 100%;
+      display: flex;
+      align-items: center;
+      padding: 0 2%;
+      margin-bottom: calc(var(--vh) * 4);
+      .profile-image {
+        height: 80%;
+        margin: auto 0;
+        flex: 0;
+      }
+      .user-info {
+        margin-left: 8%;
+        .name {
+          font-size: 0.9rem;
+          font-weight: 700;
+          margin-bottom: 2%;
+        }
+        .user-id {
+          font-size: 0.8rem;
+          color: rgb(143, 143, 143);
+        }
+      }
+    }
+  }
+  // .border {
+  //   width: 100%;
+  //   height: 1px;
+  //   background-color: rgb(164, 164, 164);
+  //   border-radius: 10px;
+  // }
+  button {
+    border-radius: 0px;
+    width: 100%;
+    height: calc(var(--vh) * 5);
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    border-top: 1px solid #000;
+    color: black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 500;
+    img {
+      height: 60%;
+    }
+  }
+  button:disabled {
+    opacity: 0.4;
+  }
+}

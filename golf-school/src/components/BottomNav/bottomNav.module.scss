@@ -1,0 +1,30 @@
+.bottom-nav {
+  position: absolute;
+  display: flex;
+  justify-content: space-around;
+  /* 아이템 간 간격 균등 배분 */
+  align-items: center;
+  height: calc(var(--vh) * 7);
+  width: calc(var(--vw) * 100);
+  background-color: var(--primary-color);
+  transform: translate(0%, -100%);
+  top: calc(var(--vh) * 100);
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+
+  .item {
+    height: 80%;
+    width: 100%;
+
+    img {
+      width: 100%;
+      height: 100%;
+      filter: invert(1) brightness(0.85);
+      transition: filter 0.2s ease-in-out;
+      object-fit: contain;
+    }
+
+    &.selected img {
+      filter: invert(0.15);
+    }
+  }
+}

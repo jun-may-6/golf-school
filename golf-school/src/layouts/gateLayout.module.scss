@@ -1,0 +1,26 @@
+.gate-logo-area {
+  height: calc(var(--vh) * 40);
+  width: 100%;
+  display: flex;
+  margin-bottom: calc(var(--vh) * 5);
+  .container {
+    margin-top: auto;
+    height: 75%;
+    width: 100%;
+    img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      height: 70%;
+      aspect-ratio: 1/1;
+    }
+    .title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 30%;
+      font-size: 1.2rem;
+      font-weight: 900;
+    }
+  }
+}

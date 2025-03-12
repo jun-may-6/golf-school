@@ -46,7 +46,7 @@ const scheduleSlice = createSlice({
         state.schedule[scheduleIndex].memberList = memberList;
       }
     },
-    setScheduleComment: (state, action: PayloadAction<{scheduleId:number, commentList: comment[]}>)=>{
+    setScheduleComment: (state, action: PayloadAction<{scheduleId:number, commentList: comment[] | null}>)=>{
       const {scheduleId, commentList} = action.payload
       const scheduleIndex = state.schedule.findIndex(s => s.id === scheduleId);
       if (scheduleIndex !== -1) {

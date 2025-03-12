@@ -11,15 +11,13 @@ createRoot(document.getElementById('root')!).render(
     </Provider>
   </StrictMode>,
 )
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker
-      .register("/service-worker.js") // 빌드 결과물 경로
-      .then((reg) => {
-        console.log("Service Worker registered: ", reg);
-      })
-      .catch((err) => {
-        console.log("Service Worker registration failed: ", err);
-      });
-  });
-}
+// if ("serviceWorker" in navigator) {
+//   window.addEventListener("load", () => {
+//     navigator.serviceWorker
+//       .register("/service-worker.js") // 빌드 결과물 경로
+//       .then((reg) => {
+//       })
+//       .catch((err) => {
+//       });
+//   });
+// }

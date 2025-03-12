@@ -1,0 +1,95 @@
+.container {
+  header {
+    position: sticky;
+    display: grid;
+    top: 0;
+    background-color: var(--primary-color);
+    color: white;
+    text-align: center;
+    width: calc(var(--vw) * 100);
+    height: calc(var(--vh) * 7);
+    align-items: center;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: calc(var(--vh) * 7);
+    .left-side {
+      box-sizing: border-box;
+      display: flex;
+      height: 100%;
+      width: 100%;
+      padding: calc(var(--vw) * 1);
+    }
+    .right-side {
+      box-sizing: border-box;
+      flex-direction: row-reverse;
+      display: flex;
+      height: 100%;
+      width: 100%;
+      padding: calc(var(--vw) * 1);
+    }
+    .icon-box {
+      margin: 0.2rem;
+      height: calc(100% - 0.4rem);
+      aspect-ratio: 1/1;
+      box-sizing: border-box;
+      border: rgb(80, 80, 80) solid 0.1rem;
+      border-radius: 5px;
+      filter: invert(5%), brightness(0%);
+      padding: 0.2rem;
+      background-color: rgb(126, 145, 127);
+      transition: filter 0.3s ease-in-out;
+      img {
+        filter: invert(90%);
+        height: 100%;
+        width: 100%;
+      }
+      &.disable {
+        filter: brightness(0.7);
+      }
+    }
+  }
+  .main {
+    position: relative;
+    height: calc(var(--vh) * 86);
+    width: calc(var(--vw) * 100);
+    background-color: var(--background-color);
+    .calendar-window {
+      position: relative;
+      overflow: hidden;
+      height: 55%;
+      width: 100%;
+      &.full {
+        height: 100%;
+      }
+      z-index: 1;
+      transition: height 0.3s ease;
+    }
+    .calendar-container {
+      transition: transform 0.3s ease;
+      height: 100%;
+      display: flex;
+    }
+    .schedule-window {
+      background-color: var(--background-color);
+      position: absolute;
+      bottom: 0;
+      z-index: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      height: 45%;
+      width: 100%;
+      &::-webkit-scrollbar {
+        width: calc(var(--vw) * 2);
+      }
+    
+      &::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.181);
+        border-radius: 10px;
+      }
+    
+      &::-webkit-scrollbar-track {
+        border-radius: 10px;
+        background: rgba(0, 0, 0, 0.047);
+      }
+    }
+  }
+}

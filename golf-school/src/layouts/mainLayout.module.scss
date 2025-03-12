@@ -1,0 +1,15 @@
+.layout {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  .main-window {
+    height: calc(var(--vh) * 93);
+    width: calc(var(--vw) * 100);
+    overflow: hidden;
+  }
+  .main-pages {
+    position: relative;
+    transition: transform 0.5s ease;
+    display: flex;
+  }
+}

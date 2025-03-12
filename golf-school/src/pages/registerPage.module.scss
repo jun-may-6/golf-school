@@ -1,0 +1,89 @@
+.container {
+  margin: 0 auto;
+  width: 70%;
+  .safe {
+    border: 1.5px solid #009e00;
+  }
+  
+  .warning {
+    border: 1.5px solid #de5e5e;
+  }
+  input {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 1.5rem;
+    margin-bottom: calc(var(--vh) * 0.5);
+    border-radius: 10px;
+    border: 1px solid #4e5c53;
+    padding: 0rem 0.8rem;
+  }
+
+  label {
+    display: block;
+    margin-bottom: calc(var(--vh) * 0.5);
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 0.5rem;
+  }
+
+  button {
+    margin-bottom: calc(var(--vh) * 0.5);
+    width: calc(var(--vw) * 70);
+    height: 1.5rem;
+    border-radius: 10px;
+    border: 1px solid gray;
+    font-weight: 600;
+    font-size: 0.7rem;
+    letter-spacing: 0.18rem;
+  }
+
+  a {
+    display: block;
+    text-align: center;
+  }
+
+  .select {
+    width: 100%;
+    height: 1.5rem;
+    margin-bottom: calc(var(--vh) * 0.5);
+    display: flex;
+
+    input {
+      display: none;
+    }
+
+    label {
+      width: 46%;
+      margin: 0 2%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.4s ease-in-out, color 0.4s ease-in-out, border-color 0.4s ease-in-out;
+      font-size: 0.8rem;
+      border-radius: 10px;
+      border: 1px solid #9b9b9b;
+      color: rgb(118, 118, 118);
+      background-color: white;
+    }
+
+    input[type=radio]:checked+label {
+      background-color: var(--primary-color);
+      color: white;
+    }
+  }
+  .test-exist {
+    display: flex;
+    input {
+      width: 78%;
+    }
+    button {
+      margin-left: 2%;
+      width: 20%;
+      font-size: 0.7rem;
+      text-align: center;
+      letter-spacing: normal;
+    }
+  }
+}

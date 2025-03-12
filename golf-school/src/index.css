@@ -82,12 +82,12 @@ time,
 mark,
 audio,
 video {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 100%;
-    font: inherit;
-    vertical-align: baseline;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
 }
 
 /* Set block elements */
@@ -102,45 +102,158 @@ hgroup,
 menu,
 nav,
 section {
-    display: block;
+  display: block;
 }
 
+img {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+}
+input {
+  font-family: 'Pretendard Variable', 'Noto Sans KR';
+}
+input:checked {
+  accent-color: var(--primary-color);
+}
 body {
-    line-height: 1;
-    font-family: 'Pretendard Variable', 'Noto Sans KR';
+  line-height: 1;
+  font-family: 'Pretendard Variable', 'Noto Sans KR';
 }
 
 ol,
 ul {
-    list-style: none;
+  list-style: none;
 }
 
 blockquote,
 q {
-    quotes: none;
+  quotes: none;
 }
 
 blockquote::before,
 blockquote::after,
 q::before,
 q::after {
-    content: '';
-    content: none;
+  content: '';
+  content: none;
 }
 
 table {
-    border-collapse: collapse;
-    border-spacing: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 
-.link {
-    font-size: 0.5rem;
-    color: #64766A;
-    text-decoration: none;
-    font-weight: bold;
+a {
+  font-size: 0.5rem;
+  font-weight: bold;
+  color: var(--primary-color);
+  text-decoration: none;
+  line-height: 1.5;
 }
 
-.link:hover {
-    color: var(--primary-color);
-    text-decoration: underline;
+* {
+  user-select: none;
+}
+
+button {
+  display: block;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 5px;
+  border: 1px solid rgb(167, 167, 167);
+  font-weight: 700;
+  transition: background-color 0.4s ease-in-out, color 0.4s ease-in-out, border-color 0.4s ease-in-out;
+}
+
+button:enabled:hover {
+  cursor: pointer;
+}
+
+button:disabled {
+  border-color: #9b9b9b;
+  color: rgb(118, 118, 118);
+  background-color: white;
+}
+
+:root {
+  position: relative;
+  font-size: calc(var(--vw) * 5.5);
+  --primary-color: #8a9f91;
+  --background-color: #F4F2F3;
+  --related-date-color: white;
+  --closed-date-color: white;
+  --not-attendance-date-color: white;
+  --calendar-date-color: #e4eee3;
+  --selected-calendar-date-color: #dfe8df;
+}
+
+
+@media (max-width: 1200px) {
+  :root {
+    --vh: 1vh;
+    --vw: 1vw;
+  }
+}
+
+@media (min-width: 1200px) {
+  :root {
+    margin-top: 5vh;
+    --vh: 8px;
+    --vw: 4px;
+  }
+
+  .mobile-view {
+    box-sizing: content-box;
+    position: relative;
+    border: 1vw solid rgb(175, 175, 175);
+    border-radius: 17px;
+    margin: auto;
+    height: 800px;
+    width: 400px;
+  }
+}
+
+html,
+body {
+  overscroll-behavior: none;
+}
+
+body {
+  background-color: var(--background-color);
+}
+
+/* 모달 */
+#modal-root {
+  position: absolute;
+  width: calc(var(--vw) * 100);
+  top: 0px;
+}
+
+.modal-overlay {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, 0);
+  margin: auto;
+  height: calc(var(--vh) * 100);
+  width: calc(var(--vw) * 100);
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: calc(var(--vw) * 5);
+  /* 부모 컨테이너에 5vw 여백 추가 */
+  box-sizing: border-box;
+  /* padding이 컨테이너 크기에 포함되도록 설정 */
+}
+
+.modal-content {
+  top: 50%;
+  left: 50%;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
 }

@@ -1,36 +1,37 @@
-import './App.css';
-import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { LoginPage } from './pages/login';
-import { MainPage } from './components/layout/mainLayout';
-import "./App.css";
-import "./Animaion.css";
-import { RegisterPage } from './pages/register';
-import { GateLayout } from './components/gateLayout/gateLayout';
-import { ProtectRouter } from './components/layout/protectRouter';
-import { AppLayout } from './components/layout/appLayout';
+// import './App.css';
+import { BrowserRouter, HashRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { LoginPage } from './pages/LoginPage';
+import { MainPage } from './layouts/MainLayout';
+import { RegisterPage } from './pages/RegisterPage';
+import { ProtectRouter } from './layouts/ProtectRouter';
+import { AppLayout } from './layouts/AppLayout';
+import { FindPasswordPage } from './pages/FindePasswordPage';
+import { GateLayout } from './layouts/GateLayout';
+import { FindUserIdPage } from './pages/FindUserIdPage';
 
 function App(): JSX.Element {
 
   return (
-    <HashRouter>
-      <AppLayout>
-        <Routes>
-          <Route path="/gate" element={<GateLayout />}>
-            <Route path="login" element={<LoginPage />} />
-            <Route path="register" element={<RegisterPage />} />
-          </Route>
-          <Route path='/' element={<ProtectRouter />}>
-          <Route index element={<Navigate to="/home" replace />} />
-            <Route
-              path="home"
-              element={<MainPage />}>
+    <div className='mobile-view'>
+      <BrowserRouter>
+        <AppLayout>
+          <Routes>
+            <Route path="/gate" element={<GateLayout />}>
+              <Route path="login" element={<LoginPage />} />
+              <Route path="register" element={<RegisterPage />} />
+              <Route path="find-id" element={<FindUserIdPage />} />
+              <Route path="find-pwd" element={<FindPasswordPage />} />
             </Route>
-          </Route>
-          <Route path="*" element={<Navigate to="/home" replace />} />
-        </Routes>
-      </AppLayout>
-    </HashRouter>
+            <Route path='/' element={<ProtectRouter />}>
+              <Route path='/' element={<MainPage />} >
+              <Route path='schedule/:id' element={<></>} />
+              </Route>
+            </Route>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </AppLayout>
+      </BrowserRouter>
+    </div>
   );
 }
-
 export default App;

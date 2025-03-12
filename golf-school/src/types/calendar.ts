@@ -48,9 +48,11 @@ export type comment = {
   id: number;
   refCommentId: number;
   userId: string;
-  name: string;
+  userGender:string;
+  userName: string;
   refUserId: string;
   refUserName: string;
+  refUserGender:string;
   message: string;
   createDate:string;
   updateDate:string;

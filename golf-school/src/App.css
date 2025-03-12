@@ -1,69 +1,14 @@
-:root {
-  font-size: 6vw;
-  --primary-color: #8a9f91;
-  --background-color: #F4F2F3;
-  --related-date-color: white;
-  --closed-date-color: white;
-  --not-attendance-date-color: white;
-  --calendar-date-color: #e4eee3;
-  --selected-calendar-date-color: #dfe8df;
-}
-
-/* 
-@media (max-width: 768px) {
-  :root {
-    font-size: 6vw;
-  }
-}
-
-@media (min-width: 1200px) {
-  :root {
-    font-size: 2vw;
-  }
-} */
-
-html,
-body {
-  overscroll-behavior: none;
-}
-
-body {
-  background-color: var(--background-color);
-}
-
 /* 기본css */
 .vw100 {
   width: 100%;
   height: 100%;
 }
-/* 모달 */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 5vw;
-  /* 부모 컨테이너에 5vw 여백 추가 */
-  box-sizing: border-box;
-  /* padding이 컨테이너 크기에 포함되도록 설정 */
-}
-
-.modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-}
 
 .gate-logo-area {
   position: relative;
   padding: auto auto auto auto;
-  height: 40vh;
-  width: 100vw;
+  height: calc(var(--vh) * 40);
+  width: calc(var(--vw) * 100);
   text-align: center;
   font-size: 1.2rem;
   font-weight: 900;
@@ -94,7 +39,7 @@ body {
 
 .login-area {
   position: relative;
-  height: 60vh;
+  height: calc(var(--vh) * 60);
 }
 
 .login-container {
@@ -104,22 +49,22 @@ body {
   left: 50%;
 }
 
-.login-container input {
+/* .login-container input {
   display: block;
   box-sizing: border-box;
-  width: 70vw;
+  width: calc(var(--vw) * 70);
   height: 1.5rem;
-  margin-bottom: 0.5vh;
+  margin-bottom: calc(var(--vh) * 0.5);
   border-radius: 10px;
   border: 1px solid #4e5c53;
   padding: 0rem 0rem 0rem 0.8rem;
-}
+} */
 .login-container select {
   display: block;
   box-sizing: border-box;
-  width: 70vw;
+  width: calc(var(--vw) * 70);
   height: 1.5rem;
-  margin-bottom: 0.5vh;
+  margin-bottom: calc(var(--vh) * 0.5);
   border-radius: 10px;
   border: 1px solid #4e5c53;
   padding: 0rem 0rem 0rem 0.8rem;
@@ -129,9 +74,9 @@ body {
 }
 
 .login-container button {
-  width: 70vw;
+  width: calc(var(--vw) * 70);
   height: 1.5rem;
-  margin-bottom: 0.5vh;
+  margin-bottom: calc(var(--vh) * 0.5);
   border-radius: 10px;
   border: 1px solid gray;
   font-family: 'Pretendard Variable', 'Noto Sans KR';
@@ -152,7 +97,7 @@ body {
 }
 .login-container label {
   display: block;
-  margin-bottom: 0.5vh;
+  margin-bottom: calc(var(--vh) * 0.5);
   color: var(--primary-color);
   font-weight: bold;
   font-size: 0.5rem;
@@ -191,17 +136,17 @@ body {
   margin: 0 0 0 0.2rem;
 }
 
-.gate-link {
+/* .gate-link {
   text-align: center;
   font-size: 0.5rem;
   padding: 0.1rem 0;
-}
+} */
 
 /* 레이아웃 */
 .layout {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: calc(var(--vh) * 100);
   width: 100%;
   overflow: hidden;
   position: relative;
@@ -215,17 +160,18 @@ body {
 }
 
 .under-bar {
-  position: fixed;
+  position: absolute;
   display: flex;
   justify-content: space-around;
   /* 아이템 간 간격 균등 배분 */
   align-items: center;
-  height: 7vh;
-  width: 100vw;
+  height: calc(var(--vh) * 7);
+  width: calc(var(--vw) * 100);
   background-color: var(--primary-color);
   /* 네비게이션 바 배경색 */
   color: white;
-  bottom: 0;
+  transform: translate(0%, -100%);
+  top: calc(var(--vh) * 100);
   box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
   /* 그림자 효과 */
 }
@@ -255,11 +201,11 @@ header {
   background-color: var(--primary-color);
   color: white;
   text-align: center;
-  width: 100vw;
-  height: 7vh;
+  width: calc(var(--vw) * 100);
+  height: calc(var(--vh) * 7);
   align-items: center;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: 7vh;
+  grid-template-rows: calc(var(--vh) * 7);
 }
 
 .header-left-side {
@@ -267,7 +213,7 @@ header {
   display: flex;
   height: 100%;
   width: 100%;
-  padding: 1vw;
+  padding: calc(var(--vw) * 1);
 }
 
 .header-right-side {
@@ -276,7 +222,7 @@ header {
   display: flex;
   height: 100%;
   width: 100%;
-  padding: 1vw;
+  padding: calc(var(--vw) * 1);
 }
 
 .header-icon-box {
@@ -305,12 +251,12 @@ header {
   position: relative;
   display: flex;
   transition: transform 0.5s ease;
-  height: 93vh;
+  height: calc(var(--vh) * 93);
 }
 
 .main-page {
   box-sizing: border-box;
-  width: 100vw;
+  width: calc(var(--vw) * 100);
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -322,7 +268,7 @@ header {
 
 .calendar-window {
   overflow: hidden;
-  height: 50vh;
+  height: calc(var(--vh) * 50);
   transition: height 0.3s ease;
   position: relative;
   background-color: var(--background-color);
@@ -343,7 +289,7 @@ header {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  width: 100vw;
+  width: calc(var(--vw) * 100);
   height: 100%;
   flex-shrink: 0;
   border: 1px solid #ddd;
@@ -353,7 +299,7 @@ header {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 10vh;
+  height: calc(var(--vh) * 10);
 }
 
 .sunday {
@@ -371,7 +317,7 @@ header {
   flex-grow: 1;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: 3vh repeat(6, 1fr);
+  grid-template-rows: calc(var(--vh) * 3) repeat(6, 1fr);
 }
 
 .calendar-date-container {
@@ -393,7 +339,7 @@ header {
   background-color: var(--calendar-date-color);
   width: 100%;
   height: 100%;
-  padding: 1vh 0;
+  padding: calc(var(--vh) * 1) 0;
 }
 
 .calendar-date-box.closed {
@@ -469,8 +415,8 @@ header {
 
 /* 스케쥴 관리 모달 */
 .schedule-modal {
-  width: 70vw;
-  height: 20vh;
+  width: calc(var(--vw) * 70);
+  height: calc(var(--vh) * 20);
 }
 
 .schedule-modal .header {
@@ -507,15 +453,15 @@ header {
 }
 
 .schedule-modal img {
-  height: 5vh;
+  height: calc(var(--vh) * 5);
   object-fit: cover;
 }
 
 
 /* 일정 등록 모달 */
 .schedule-set-modal {
-  width: 70vw;
-  height: 60vh;
+  width: calc(var(--vw) * 70);
+  height: calc(var(--vh) * 60);
 }
 
 .schedule-set-modal .header {
@@ -565,8 +511,8 @@ header {
 }
 
 .date-select-area {
-  height: 50vh;
-  width: 70vw;
+  height: calc(var(--vh) * 50);
+  width: calc(var(--vw) * 70);
 }
 
 .date-select-area .calendar-grid {
@@ -594,15 +540,15 @@ header {
 
 .schedule-set-modal input {
   box-sizing: border-box;
-  width: 70vw;
+  width: calc(var(--vw) * 70);
   height: 1.5rem;
-  margin-bottom: 0.5vh;
+  margin-bottom: calc(var(--vh) * 0.5);
   border: none;
   padding: 0 2%;
 }
 
 .schedule-set-modal select {
-  width: 20vw;
+  width: calc(var(--vw) * 20);
   height: 70%;
   border-radius: 5px;
   padding: 0 0 0 5%;
@@ -621,7 +567,7 @@ header {
 .schedule-set-modal input[type="color"] {
   height: 80%;
   padding: 0;
-  width: 20vw;
+  width: calc(var(--vw) * 20);
   border-radius: 1px;
 }
 
@@ -631,7 +577,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 4vh;
+  height: calc(var(--vh) * 4);
 }
 .title-area label{
   display: flex;
@@ -652,8 +598,7 @@ header {
 }
 
 .toggle-area.on {
-  max-height: 30vh;
-  /* 충분한 크기로 설정 (컨텐츠 크기에 맞게 조정) */
+  max-height: calc(var(--vh) * 30);
   opacity: 1;
 }
 
@@ -669,11 +614,11 @@ header {
   border-radius: 8px;
   text-align: center;
   font-size: 0.7rem;
-  padding: 0 20vw;
+  padding: 0 calc(var(--vw) * 20);
 }
 
 .time-set-area.on {
-  padding: 2vw 5vw;
+  padding: calc(var(--vw) * 2) calc(var(--vw) * 5);
 }
 
 .time-set-area input {
@@ -687,12 +632,12 @@ header {
   width: 100%;
   background-color: #d7d7d7;
   height: 1px;
-  margin: 0.5vh 0;
+  margin: calc(var(--vh) * 0.5) 0;
 }
 
 .schedule-member-set-modal {
-  width: 70vw;
-  height: 50vh;
+  width: calc(var(--vw) * 70);
+  height: calc(var(--vh) * 50);
 }
 
 .schedule-member-set-modal .header {
@@ -754,7 +699,7 @@ header {
 }
 
 .schedule-member-set-modal .profile {
-  height: 4vh;
+  height: calc(var(--vh) * 4);
   display: flex;
   align-items: center;
   padding: 0 5%;
@@ -790,8 +735,8 @@ header {
 }
 
 .range-modal {
-  width: 70vw;
-  height: 20vh;
+  width: calc(var(--vw) * 70);
+  height: calc(var(--vh) * 20);
 }
 
 .range-modal .header {
@@ -914,21 +859,21 @@ header {
 }
 
 .calendar-schedule-window {
-  height: calc(100% - 50vh);
+  height: calc(100% - calc(var(--vh) * 50));
   width: 100%;
   background-color: var(--background-color);
   position: absolute;
   bottom: 0;
   z-index: 0;
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 .schedule-box {
   width: 100%;
-  height: 7vh;
+  height: calc(var(--vh) * 7);
   display: flex;
   align-items: center;
-  overflow: scroll;
+  overflow: hidden;
   border-bottom: 1px solid rgb(198, 198, 198);
   box-sizing: border-box;
 }
@@ -1002,8 +947,8 @@ header {
 }
 
 .schedule-view-modal {
-  width: 70vw;
-  height: 60vh;
+  width: calc(var(--vw) * 70);
+  height: calc(var(--vh) * 60);
 }
 
 .schedule-view-modal .header {
@@ -1035,7 +980,7 @@ header {
 
 .schedule-view-modal .contents .detail .profile {
   display: flex;
-  min-height: 7vh;
+  min-height: calc(var(--vh) * 7);
   width: 100%;
   justify-items: center;
   border-top: 1px solid rgb(212, 212, 212);
@@ -1044,8 +989,8 @@ header {
 .schedule-view-modal .contents .detail button {
   font-size: 0.5rem;
   display: block;
-  height: 3.5vh;
-  width: 10.5vw;
+  height: calc(var(--vh) * 3.5);
+  width: calc(var(--vw) * 10.5);
   border-radius: 5px;
   border: 1px solid rgb(103, 103, 103);
   font-weight: 700;
@@ -1092,40 +1037,40 @@ header {
   width: auto;
   color: #000000;
   border: 1px solid rgb(180, 180, 180);
-  padding: 2vw;
-  margin-left: 2vw;
+  padding: calc(var(--vw) * 2);
+  margin-left: calc(var(--vw) * 2);
   border-radius: 5px;
 }
 .schedule-view-modal .comment-area .comment-input {
   width: 100%;
   display: flex;
   align-items: center;
-  min-height: 7vh;
+  min-height: calc(var(--vh) * 7);
 }
 
 .schedule-view-modal .comment-area .profile-img {
-  width: 8vw;
-  height: 8vw;
-  padding-right: 3vw;
+  width: calc(var(--vw) * 8);
+  height: calc(var(--vw) * 8);
+  padding-right: calc(var(--vw) * 3);
 }
 .schedule-view-modal .comment-area .send {
-  padding: 2vw;
-  width: 8vw;
-  height: 8vw;
+  padding: calc(var(--vw) * 2);
+  width: calc(var(--vw) * 8);
+  height: calc(var(--vw) * 8);
 }
 .schedule-view-modal .comment-area textarea {
-  padding: 1vw;
+  padding: calc(var(--vw) * 1);
   border-color: #9FBAAB;
   border-radius: 5px;
   resize: none;
-  height: 4vh;
-  width: 100vw;
+  height: calc(var(--vh) * 4);
+  width: calc(var(--vw) * 100);
   font-family: 'Pretendard Variable', 'Noto Sans KR';
 }
 .schedule-view-modal .comment-area .comment {
   width: 100%;
   display: flex;
-  padding: 1vh 0;
+  padding: calc(var(--vh) * 1) 0;
 }
 .schedule-view-modal .comment-area .comment .value {
   width: 100%
@@ -1144,7 +1089,7 @@ header {
   color: #B0B0B0;
 }
 .schedule-view-modal .comment-area .comment .bottom {
-  margin-top: 1vh;
+  margin-top: calc(var(--vh) * 1);
   bottom: 0px;
   font-size: 0.6rem;
 }
@@ -1152,17 +1097,17 @@ header {
   display: flex;
 }
 .schedule-view-modal .comment-area .reply-icon {
-  width: 4vw;
-  margin-right: 2vw;
-  height: 4vw;
+  width: calc(var(--vw) * 4);
+  margin-right: calc(var(--vw) * 2);
+  height: calc(var(--vw) * 4);
 }
 .schedule-view-modal .comment-area .modify-input {
   display: flex;
-  width: calc(100% - 11vw);
+  width: calc(100% - calc(var(--vw) * 11));
 }
 .schedule-view-modal .comment-area .reply-modify-input {
   display: flex;
-  width: calc(100% - 11vw - 6vw);
+  width: calc(100% - calc(var(--vw) * 11) - calc(var(--vw) * 6));
 }
 .hash-tag {
   color: #5F7C5E
@@ -1174,7 +1119,7 @@ header {
   width: 100%;
   height: 1px;
   background-color: rgb(77, 77, 77);
-  margin: 2vh 0;
+  margin: calc(var(--vh) * 2) 0;
 }
 /* 말풍선 꼬리 추가 */
 .schedule-view-modal .contents .detail .profile .reason .message::before {
@@ -1183,7 +1128,7 @@ header {
   left: calc(0% );
   top: 50%;
   position: absolute;
-  height: 2.3vh;
+  height: calc(var(--vh) * 2.3);
   aspect-ratio: 1/1.3;
   background: #000000;
   clip-path: polygon(0% 50%, 100% 0%, 100% 100%);
@@ -1194,7 +1139,7 @@ header {
   left: calc(0% + 0.8px);
   top: 50%;
   position: absolute;
-  height: 2.3vh;
+  height: calc(var(--vh) * 2.3);
   aspect-ratio: 1/1.3;
   background: #e9ffce;
   clip-path: polygon(0% 50%, 100% 0%, 100% 100%);
@@ -1244,8 +1189,8 @@ header {
   border-color: #b9b9b9;
 }
 .attendance-modal {
-  width: 70vw;
-  height: 35vh;
+  width: calc(var(--vw) * 70);
+  height: calc(var(--vh) * 3.5);
 }
 .attendance-modal .header{
   box-sizing: border-box;
@@ -1289,7 +1234,7 @@ header {
   box-sizing: border-box;
   padding-left: 3%;
   width: 85%;
-  height: 5vh;
+  height: calc(var(--vh) * 5);
 }
 .date-select-area .button-area {
   display: flex;
@@ -1317,4 +1262,36 @@ header {
   font-size: 0.7rem;
   text-align: center;
   letter-spacing: normal;
+}
+
+.find-id-result-box {
+  border: 1px solid black;
+  border-radius: 10px;
+  height: calc(var(--vh)*30);
+  width: calc(var(--vw) * 100);
+}
+.find-id-result-box .header {
+  font-weight: 700;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 20%;
+  border-bottom: 1px solid black;
+  margin: 0 5%;
+}
+.find-id-result-box .contents {
+  display: flex;
+  height: 80%;
+}
+.find-id-result-box .profile-img {
+  box-sizing: border-box;
+  padding: 5%;
+  width: 40%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+}
+.find-id-result-box img {
+  width: 100%;
+  object-fit: contain;
 }

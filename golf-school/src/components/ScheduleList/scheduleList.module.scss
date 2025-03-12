@@ -1,0 +1,59 @@
+.schedule-box {
+  width: 100%;
+  height: calc(var(--vh) * 7);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  border-bottom: 1px solid rgb(198, 198, 198);
+  box-sizing: border-box;
+  .timeline {
+    height: 100%;
+    width: 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    .border {
+      box-sizing: border-box;
+      height: 100%;
+      width: 1px;
+      background-color: rgb(84, 84, 84);
+      &.start {
+        height: 60%;
+        margin-top: 50%;
+      }
+      &.end {
+        height: 60%;
+        margin-bottom: 50%;
+      }
+      &.start.end, &.not-continuous {
+        height: 0px;
+      }
+    }
+    .color {
+      position: absolute;
+      width: 1rem;
+      height: 1rem;
+      border: white 3px solid;
+      border-radius: 10px;
+    }
+  }
+  .timezone {
+    width: 25%;
+    font-size: 0.6rem;
+  }
+  .title-area {
+    box-sizing: border-box;
+    padding-left: 1rem;
+    display: block;
+    .title {
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .description {
+      font-size: 0.6rem;
+      color: #4e5c53;
+    }
+  }
+}

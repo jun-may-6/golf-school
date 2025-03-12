@@ -5,9 +5,9 @@ const initialState:userInfo = {
   userId: "",
   name: "",
   email: "",
-  joinDate: new Date,
+  joinDate: "",
   leaveDate: null,
-  birthday: new Date,
+  birthday: "",
   gender: "",
   accessLevel: "",
   profileImagePath: null
