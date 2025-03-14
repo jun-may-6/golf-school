@@ -101,7 +101,8 @@ export function RegisterPage() {
           value={inputData.id || ""}
           className={cx({
             safe: isPossibleId,
-            warning: inputData.id != "" && !isPossibleId})}
+            warning: inputData.id != "" && !isPossibleId
+          })}
         />
         <button
           onClick={() => {
@@ -121,8 +122,9 @@ export function RegisterPage() {
         type="password"
         placeholder="비밀번호를 확인해주세요."
         className={cx({
-          safe: inputData.checkPassword != "" && inputData.password == inputData.checkPassword, 
-          warning: inputData.checkPassword != "" && inputData.password != inputData.checkPassword})}
+          safe: inputData.checkPassword != "" && inputData.password == inputData.checkPassword,
+          warning: inputData.checkPassword != "" && inputData.password != inputData.checkPassword
+        })}
         onChange={onChangeHandler}
         value={inputData.checkPassword || ""}
       />
@@ -142,8 +144,12 @@ export function RegisterPage() {
       />
       <label htmlFor="birthday">성별</label>
       <div className={cx("select")}>
-        <input type="radio" id="male" name="gender" value="남" /><label htmlFor="male">남성</label>
-        <input type="radio" id="female" name="gender" value="여" /><label htmlFor="female">여성</label>
+        <input type="radio" id="male" name="gender" value="남" onChange={(e) => {
+          setInputData(state => ({ ...state, gender: e.target.value }))
+        }} /><label htmlFor="male">남성</label>
+        <input type="radio" id="female" name="gender" value="여" onChange={(e) => {
+          setInputData(state => ({ ...state, gender: e.target.value }))
+        }} /><label htmlFor="female">여성</label>
       </div>
       <label htmlFor="email">이메일</label>
       <input

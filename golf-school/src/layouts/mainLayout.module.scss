@@ -12,4 +12,8 @@
     transition: transform 0.5s ease;
     display: flex;
   }
+  .outlet {
+    position: absolute;
+    top:0;
+  }
 }

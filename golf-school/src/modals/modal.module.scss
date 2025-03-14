@@ -164,6 +164,19 @@
     border: none;
     padding: 0 2%;
   }
+  textarea {
+    box-sizing: border-box;
+    width: calc(var(--vw) * 70);
+    min-height: 1.5rem;
+    border: none;
+    padding: 0 2%;
+    resize: vertical;
+  }
+  input[type="date"] {
+    margin-left: auto;
+    width: 60%;
+    height: auto;
+  }
 
   input[type="checkbox"] {
     height: 60%;
@@ -187,7 +200,7 @@
     padding-left: calc(var(--vw) * 1);
     .date{
       margin-bottom: calc(var(--vh) * 0.5);
-      font-size: 0.7rem;
+      font-size: 0.5rem;
     }
   }
   .time-set-area {
@@ -347,6 +360,7 @@
     .description {
       padding-left: 3%;
       font-size: 0.65rem;
+      white-space: pre-line;
     }
     .member {
       display: flex;

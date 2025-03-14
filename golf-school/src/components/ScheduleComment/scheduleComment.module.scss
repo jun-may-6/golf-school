@@ -41,6 +41,7 @@
       display: flex;
     }
     .bottom {
+      white-space: pre-line;
       margin-top: calc(var(--vh) * 1);
       bottom: 0px;
       font-size: 0.6rem;

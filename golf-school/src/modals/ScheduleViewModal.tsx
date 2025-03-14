@@ -102,7 +102,7 @@ export function ScheduleViewModal({ selectedSchedule, openModifyModal, onClose }
             <div className={cx("description")}>
               {selectedSchedule.memberList.map(m => {
                 const profileImage = m.gender == "남" ? "icon/male.png" : "icon/female.png"
-                return <> <div className={cx("member")}>
+                return <span key={m.id}> <div className={cx("member")}>
                   <img src={profileImage} />
                   <div className={cx("name")}>
                     {m.name}
@@ -132,7 +132,7 @@ export function ScheduleViewModal({ selectedSchedule, openModifyModal, onClose }
                     m.absenceReason ?
                     <button className={cx("cancel-btn")} onClick={() => cancelAbsence(m.id)}>취소</button>
                     : null}
-                    </>
+                    </span>
               })}
             </div>
           }
@@ -184,9 +184,6 @@ export function ScheduleViewModal({ selectedSchedule, openModifyModal, onClose }
             value={attendanceInput.message}
               onChange={(e) => { setAttendanceInput(state => ({ ...state, message: e.target.value })) }} />
           </div>
-          <div>
-          </div>
-          <div></div>
         </div>
         <div className={cx("button-area")}>
           <button className={cx("cancel")}

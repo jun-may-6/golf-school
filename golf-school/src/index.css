@@ -115,6 +115,9 @@ img {
 input {
   font-family: 'Pretendard Variable', 'Noto Sans KR';
 }
+textarea {
+  font-family: 'Pretendard Variable', 'Noto Sans KR';
+}
 input:checked {
   accent-color: var(--primary-color);
 }

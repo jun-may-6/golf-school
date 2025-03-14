@@ -72,7 +72,7 @@ export function ScheduleSetModal({ closeModalFunction, month, monthRange }: { cl
       <div className={cx("title")}>
       <label>설명</label>
       </div>
-      <input placeholder="일정에 대한 설명을 입력해주세요." onChange={(e) => { setInputData(state => { return { ...state, description: e.target.value } }) }} />
+      <textarea placeholder="일정에 대한 설명을 입력해주세요." onChange={(e) => { setInputData(state => { return { ...state, description: e.target.value } }) }} />
       <div className={cx("border")} />
       <div className={cx("title")}>
         <label>날짜 선택</label>

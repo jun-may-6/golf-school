@@ -1,4 +1,4 @@
-// import './App.css';
+import './App.css';
 import { BrowserRouter, HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { LoginPage } from './pages/LoginPage';
 import { MainPage } from './layouts/MainLayout';
@@ -8,12 +8,13 @@ import { AppLayout } from './layouts/AppLayout';
 import { FindPasswordPage } from './pages/FindePasswordPage';
 import { GateLayout } from './layouts/GateLayout';
 import { FindUserIdPage } from './pages/FindUserIdPage';
+import { AccountSettingPage } from './pages/AccountSettingPage';
 
 function App(): JSX.Element {
 
   return (
     <div className='mobile-view'>
-      <BrowserRouter>
+      <BrowserRouter basename='/'>
         <AppLayout>
           <Routes>
             <Route path="/gate" element={<GateLayout />}>
@@ -24,7 +25,8 @@ function App(): JSX.Element {
             </Route>
             <Route path='/' element={<ProtectRouter />}>
               <Route path='/' element={<MainPage />} >
-              <Route path='schedule/:id' element={<></>} />
+                <Route path='schedule/:id' element={<></>} />
+                <Route path='account/setting' element={<AccountSettingPage />} />
               </Route>
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />

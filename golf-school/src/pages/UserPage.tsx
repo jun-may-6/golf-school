@@ -34,11 +34,11 @@ export function User({ pageIndex, pageName }: { pageIndex: number, pageName: str
       <div className={cx("profile")}>
         <img className={cx("profile-image")} src={userInfo.gender == "남" ? "/icon/male.png" : "/icon/female.png"} />
         <div className={cx("user-info")}>
-          <div className={cx("name")}>{userInfo.name}</div>
+          <div className={cx("name")}>{userInfo.name}{userInfo.accessLevel == "ADMIN" ?"(관리자)":""}</div>
           <div className={cx("user-id")}>{userInfo.userId}</div>
         </div>
       </div>
-      <button disabled={true}>
+      <button onClick={() => {navigate("/account/setting")}}>
         회원정보 수정
         <img src="/icon/arrow.png"/>
       </button>

@@ -37,7 +37,7 @@ export function Calendar({ monthData, isFullCalendar, setIsFullCalendar }: { mon
         <div className={cx("day")}>토</div>
         {[...monthData.beforeMonthDayArray, ...monthData.currentMonthDayArray, ...monthData.nextMonthDayArray].map(
           (day, index) => {
-            return <div className={cx("date-container")}>
+            return <div className={cx("date-container")} key={day.date}>
               <div className={cx("selected-box", { select: day.date == date })}/>
               <div
                 key={index}

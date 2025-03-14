@@ -17,6 +17,7 @@ export function SelectDateCalendar({ month, setInputData, dateArray, onCloseModa
       } else {
         newDateArray = [...state.dateArray, day.date];
       }
+      newDateArray.sort((a, b)=>(a > b ? 1 : -1))
       return { ...state, dateArray: newDateArray }
     });
   }

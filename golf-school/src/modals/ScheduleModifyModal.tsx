@@ -8,7 +8,7 @@ import { useAppDispatch } from "../store";
 import { endGlobalLoading, startGlobalLoading } from "../store/globalLoadingSlice";
 import { getSchedule } from "../store/scheduleSlice";
 import styles from "./modal.module.scss"
-import classNames from "classnames";
+import classNames from "classnames/bind";
 export function ScheduleModifyModal(
   {
     selectedSchedule,
@@ -22,8 +22,7 @@ export function ScheduleModifyModal(
       onClose: () => void;
     }
 ) {
-  const cx = classNames.bind(styles)
-  if(selectedSchedule == undefined) return
+  if (selectedSchedule == undefined) return
   const dispatch = useAppDispatch();
   const [isSetTime, setIsSetTime] = useState<boolean>(selectedSchedule.startTime != null && selectedSchedule.endTime != null);
   const [isOpenMemberModal, setIsOpenMemberModal] = useState<boolean>(false);
@@ -34,7 +33,7 @@ export function ScheduleModifyModal(
         dispatch(startGlobalLoading("회원 조회중"))
         const responseUserList = await callApi.get("/users")
         setUserList(responseUserList.data)
-      } catch(e) {
+      } catch (e) {
         handleApiError(e)
       } finally {
         dispatch(endGlobalLoading())
@@ -42,7 +41,7 @@ export function ScheduleModifyModal(
     }
     getScheduleMembers();
   }, [])
-
+  const cx = classNames.bind(styles)
 
 
   const [modifyInput, setModifyInput] = useState<{
@@ -64,7 +63,7 @@ export function ScheduleModifyModal(
     endTime: selectedSchedule.endTime,
     color: selectedSchedule.color,
     isClosed: false,
-    memberIdArray: selectedSchedule.memberList?selectedSchedule.memberList.map(m=>m.userId):[]
+    memberIdArray: selectedSchedule.memberList ? selectedSchedule.memberList.map(m => m.userId) : []
   });
 
   const onClickModifyButton = () => {
@@ -73,7 +72,7 @@ export function ScheduleModifyModal(
         dispatch(startGlobalLoading("수정중"))
         const response = await callApi.put("/schedules", modifyInput)
         dispatch(getSchedule())
-        if(response.status == 200){
+        if (response.status == 200) {
           openViewModal()
           onClose()
         }
@@ -87,36 +86,53 @@ export function ScheduleModifyModal(
   }
 
 
-  return <div className="schedule-set-modal">
-    <div className="header">일정 수정</div>
-    <div className="contents">
-      <div className="set-schedule-input-area">
+  return <div className={cx("schedule-set-modal")}>
+    <div className={cx("header")}>일정 수정</div>
+    <div className={cx("contents")}>
+      <div className={cx("set-schedule-input-area")}>
         <label>제목</label>
         <input
           placeholder="일정의 이름을 입력해주세요."
           value={modifyInput.title}
           onChange={(e) => { setModifyInput(state => { return { ...state, title: e.target.value } }) }} />
-        <div className="border" />
+        <div className={cx("border")} />
         <label>설명</label>
-        <input
+        <textarea
           placeholder="일정에 대한 설명을 입력해주세요."
           value={modifyInput.description}
           onChange={(e) => { setModifyInput(state => { return { ...state, description: e.target.value } }) }} />
-        <div className="border" />
-        <div className="title-area">
+        <div className={cx("border")} />
+        <div className={cx("title")}>
           <label>날짜 선택</label>
           <input
-        type="date"
-        value={modifyInput.date || ""}
-        onChange={(e)=>{
-          setModifyInput(state=>({...state, date:e.target.value}))
-        }}
-      />
+            type="date"
+            value={modifyInput.date || ""}
+            onChange={(e) => {
+              setModifyInput(state => ({ ...state, date: e.target.value }))
+            }}
+          />
         </div>
-        <div className="border" />
-        <div className="title-area">
+        <div className={cx("border")} />
+        <div className={cx("title")}>
           <label>인원 선택</label>
           <img src="user.png" onClick={() => { setIsOpenMemberModal(true) }} />
+        </div>
+        <div className={cx("member-preview")}>
+          {userList.filter(u => modifyInput.memberIdArray.includes(u.userId)).map(user => {
+            const profileImage = user.gender == '여' ? "icon/female.png" : "icon/male.png";
+            const birthday = new Date(user.birthday);
+            return (
+              <div key={user.userId} className={cx("profile")}>
+                <div className={cx("icon")}>
+                  <img src={profileImage} />
+                </div>
+                <div className={cx("name-area")}>
+                  <div className={cx("name")}>{user.name}</div>
+                  <div className={cx("birthday")}>{`${birthday.getFullYear()}.${birthday.getMonth() + 1}.${birthday.getDate()}`}</div>
+                </div>
+              </div>
+            );
+          })}
         </div>
         <Modal isOpen={isOpenMemberModal} onRequestClose={() => { setIsOpenMemberModal(false) }}>
           <ScheduleMemberSetModal
@@ -126,8 +142,8 @@ export function ScheduleModifyModal(
             onClose={() => { setIsOpenMemberModal(false) }}
           />
         </Modal>
-        <div className="border" />
-        <div className="title-area">
+        <div className={cx("border")} />
+        <div className={cx("title")}>
           <label>시간 설정</label>
           <input type="checkBox"
             defaultChecked={isSetTime}
@@ -135,10 +151,10 @@ export function ScheduleModifyModal(
               if (e.target.checked) {
                 setIsSetTime(true)
                 setModifyInput(state => {
-                  if(selectedSchedule.startTime != null && selectedSchedule.endTime != null){
+                  if (selectedSchedule.startTime != null && selectedSchedule.endTime != null) {
                     return {
                       ...state,
-                      startTime: selectedSchedule.startTime, endTime:selectedSchedule.endTime
+                      startTime: selectedSchedule.startTime, endTime: selectedSchedule.endTime
                     }
                   }
                   const current = new Date();
@@ -154,7 +170,7 @@ export function ScheduleModifyModal(
               }
             }} />
         </div>
-        <div className={`time-set-area toggle-area ${isSetTime ? "on" : "off"}`}>
+        <div className={cx(`time-set-area`, { on: isSetTime })}>
           <input
             type="time"
             value={modifyInput.startTime || ""}
@@ -180,8 +196,8 @@ export function ScheduleModifyModal(
             }}
           />
         </div>
-        <div className="border" />
-        <div className="title-area">
+        <div className={cx("border")} />
+        <div className={cx("title")}>
           <label>휴일 등록</label>
           <input type="checkbox"
             checked={modifyInput.isClosed}
@@ -193,8 +209,8 @@ export function ScheduleModifyModal(
             onChange={() => { }}
           />
         </div>
-        <div className="border" />
-        <div className="title-area">
+        <div className={cx("border")} />
+        <div className={cx("title")}>
           <label>색상</label>
           <input type="color"
             value={modifyInput.color}
@@ -204,18 +220,13 @@ export function ScheduleModifyModal(
         </div>
       </div>
     </div>
-    <div className="button-area">
-      <button className="cancel"
-        onClick={()=>{
+    <div className={cx("button-area")}>
+      <button className={cx("cancel")}
+        onClick={() => {
           onClose()
           openViewModal()
         }}>취소</button>
-      <button className={`register 
-          ${modifyInput.title != "" &&
-          modifyInput.description != ""
-          ? "activate"
-          : "deactivate"
-        }`}
+      <button
         disabled={!(modifyInput.title != "" &&
           modifyInput.description != "")}
         onClick={onClickModifyButton}
